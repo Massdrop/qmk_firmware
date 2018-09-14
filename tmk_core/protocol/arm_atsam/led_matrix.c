@@ -418,12 +418,12 @@ void led_matrix_run(led_setup_t *f)
                             skip = 1;
                         } else if (
                             (64 <= led_cur->id && led_cur->id <= 95) &&
-                            (~led_cur_instruction->id1 & ((uint32_t) 1UL << (led_cur->id - 64)))
+                            (~led_cur_instruction->id2 & ((uint32_t) 1UL << (led_cur->id - 64)))
                         ) {
                             skip = 1;
                         } else if (
                             (96 <= led_cur->id && led_cur->id <= 127) &&
-                            (~led_cur_instruction->id1 & ((uint32_t) 1UL << (led_cur->id - 96)))
+                            (~led_cur_instruction->id3 & ((uint32_t) 1UL << (led_cur->id - 96)))
                         ) {
                             skip = 1;
                         }
