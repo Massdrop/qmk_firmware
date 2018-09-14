@@ -202,19 +202,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-uint8_t cur_layer = 0;
-
-uint32_t layer_state_set_user(uint32_t state) {
-    cur_layer = biton32(state);
-    return state;
-}
-
-// led_instruction_t led_instructions[] = {
-//     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id = 1, .r = 255, .g = 0, .b = 0 },
-//     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_PATTERN, .id = 2, .pattern_id = 8 },
-//     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id = 3, .r = 0, .g = 255, .b = 0 },
-//     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_PATTERN, .id = 4, .pattern_id = 9 },
-//     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id = 5, .r = 0, .g = 0, .b = 255 },
-//     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN, .id = 6 },
-//     { .end = 1 }
-// };
+led_instruction_t led_instructions[] = {
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id = 1, .r = 255, .g = 0, .b = 0 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_PATTERN, .id = 2, .pattern_id = 8 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id = 3, .r = 0, .g = 255, .b = 0 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_PATTERN, .id = 4, .pattern_id = 9 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id = 5, .r = 0, .g = 0, .b = 255 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN, .id = 6 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id = 18, .layer = 0 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id = 24, .layer = 1 },
+    { .end = 1 }
+};

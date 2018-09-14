@@ -151,7 +151,7 @@ extern const uint8_t led_setups_count;
 extern void *led_setups[];
 extern led_instruction_t led_instructions[];
 
-extern uint8_t cur_layer;
+extern uint32_t layer_state;
 
 extern issi3733_led_t *led_cur;
 extern issi3733_led_t *lede;

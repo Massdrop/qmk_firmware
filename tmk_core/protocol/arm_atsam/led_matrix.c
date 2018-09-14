@@ -397,18 +397,18 @@ void led_matrix_run(led_setup_t *f)
                 while (!led_cur_instruction->end) {
                     skip = 0;
 
-                    if (
-                        led_cur_instruction->flags & LED_FLAG_MATCH_ID
-                        && led_cur_instruction->id != led_cur->id
-                    ) {
-                        skip = 1;
+                    if (led_cur_instruction->flags & LED_FLAG_MATCH_ID) {
+                        if (led_cur_instruction->id != led_cur->id) {
+                            skip = 1;
+                        }
                     }
 
-                    if (
-                        led_cur_instruction->flags & LED_FLAG_MATCH_LAYER
-                        && led_cur_instruction->layer == cur_layer
-                    ) {
-                        skip = 1;
+                    if (led_cur_instruction->flags & LED_FLAG_MATCH_LAYER) {
+                        if (layer_state == 0 && led_cur_instruction->layer == 0) {
+                            //
+                        } else if (~layer_state & (1UL << (led_cur_instruction->layer))) {
+                            skip = 1;
+                        }
                     }
 
                     if (!skip) {
