@@ -398,7 +398,17 @@ void led_matrix_run(led_setup_t *f)
                     skip = 0;
 
                     if (led_cur_instruction->flags & LED_FLAG_MATCH_ID) {
-                        if (led_cur_instruction->id != led_cur->id) {
+                        if (led_cur_instruction->id0 == 0 && led_cur_instruction->id1 == 0 && led_cur->id == 0) {
+                            //
+                        } else if (
+                            (0 <= led_cur->id && led_cur->id <= 63)
+                            && (~led_cur_instruction->id0 & ((uint64_t) 1UL << led_cur->id))
+                        ) {
+                            skip = 1;
+                        } else if (
+                            (64 <= led_cur->id && led_cur->id <= 127)
+                            && (~led_cur_instruction->id1 & ((uint64_t) 1UL << (led_cur->id - 64)))
+                        ) {
                             skip = 1;
                         }
                     }
@@ -406,7 +416,7 @@ void led_matrix_run(led_setup_t *f)
                     if (led_cur_instruction->flags & LED_FLAG_MATCH_LAYER) {
                         if (layer_state == 0 && led_cur_instruction->layer == 0) {
                             //
-                        } else if (~layer_state & (1UL << (led_cur_instruction->layer))) {
+                        } else if (~layer_state & (1UL << led_cur_instruction->layer)) {
                             skip = 1;
                         }
                     }
