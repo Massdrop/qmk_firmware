@@ -122,8 +122,10 @@ typedef struct led_setup_s {
 
 typedef struct led_instruction_s {
     uint16_t flags; // Bitfield for LED instructions
-    uint64_t id0; // Bitwise id, IDs 0-63
-    uint64_t id1; // Bitwise id, IDs 64-127
+    uint32_t id0; // Bitwise id, IDs 0-31
+    uint32_t id1; // Bitwise id, IDs 32-63
+    uint32_t id2; // Bitwise id, IDs 64-95
+    uint32_t id3; // Bitwise id, IDs 96-127
     uint8_t layer;
     uint8_t r;
     uint8_t g;

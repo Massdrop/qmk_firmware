@@ -398,16 +398,32 @@ void led_matrix_run(led_setup_t *f)
                     skip = 0;
 
                     if (led_cur_instruction->flags & LED_FLAG_MATCH_ID) {
-                        if (led_cur_instruction->id0 == 0 && led_cur_instruction->id1 == 0 && led_cur->id == 0) {
+                        if (
+                            led_cur_instruction->id0 == 0 &&
+                            led_cur_instruction->id1 == 0 &&
+                            led_cur_instruction->id2 == 0 &&
+                            led_cur_instruction->id3 == 0 &&
+                            led_cur->id == 0
+                        ) {
                             //
                         } else if (
-                            (0 <= led_cur->id && led_cur->id <= 63)
-                            && (~led_cur_instruction->id0 & ((uint64_t) 1UL << led_cur->id))
+                            (0 <= led_cur->id && led_cur->id <= 31) &&
+                            (~led_cur_instruction->id0 & ((uint32_t) 1UL << led_cur->id))
                         ) {
                             skip = 1;
                         } else if (
-                            (64 <= led_cur->id && led_cur->id <= 127)
-                            && (~led_cur_instruction->id1 & ((uint64_t) 1UL << (led_cur->id - 64)))
+                            (32 <= led_cur->id && led_cur->id <= 63) &&
+                            (~led_cur_instruction->id1 & ((uint32_t) 1UL << (led_cur->id - 32)))
+                        ) {
+                            skip = 1;
+                        } else if (
+                            (64 <= led_cur->id && led_cur->id <= 95) &&
+                            (~led_cur_instruction->id1 & ((uint32_t) 1UL << (led_cur->id - 64)))
+                        ) {
+                            skip = 1;
+                        } else if (
+                            (96 <= led_cur->id && led_cur->id <= 127) &&
+                            (~led_cur_instruction->id1 & ((uint32_t) 1UL << (led_cur->id - 96)))
                         ) {
                             skip = 1;
                         }
