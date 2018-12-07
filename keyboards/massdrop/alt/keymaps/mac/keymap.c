@@ -100,13 +100,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case L_PSI:
             if (record->event.pressed) {
-                led_animation_speed += ANIMATION_SPEED_STEP;
+                led_animation_period_scalar /= ANIMATION_SPEED_STEP;
             }
             return false;
         case L_PSD:
             if (record->event.pressed) {
-                led_animation_speed -= ANIMATION_SPEED_STEP;
-                if (led_animation_speed < 0) led_animation_speed = 0;
+                led_animation_period_scalar *= ANIMATION_SPEED_STEP;
             }
             return false;
         case L_T_MD:

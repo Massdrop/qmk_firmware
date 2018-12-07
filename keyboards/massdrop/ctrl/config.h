@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 11
 #define MATRIX_COLS 8
 
+#define KEYMAP_ROWS 6
+#define KEYMAP_COLS 18
+
 #define PA 0
 #define PB 1
 

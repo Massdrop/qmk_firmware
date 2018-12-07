@@ -15,11 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ctrl.h"
-
 #include "d51_util.h"
 #include "debug.h"
 #include "clks.h"
+#include "matrix.h"
 #include <string.h>
 
 matrix_row_t mlatest[MATRIX_ROWS];
@@ -75,7 +74,7 @@ void matrix_init(void)
         PORT->Group[col_ports[col]].DIRSET.reg = 1 << col_pins[col]; //Output
         PORT->Group[col_ports[col]].OUTCLR.reg = 1 << col_pins[col]; //Low
     }
-    
+
     matrix_init_quantum();
 }
 

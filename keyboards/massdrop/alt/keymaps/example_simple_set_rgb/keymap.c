@@ -1,5 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "rgb_matrix_user.h"
 
 enum alt_keycodes {
   L_BRI = SAFE_RANGE, //LED Brightness Increase
@@ -24,7 +23,6 @@ enum alt_keycodes {
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
-#define ______ KC_TRNS
 
 keymap_config_t keymap_config;
 
@@ -34,22 +32,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
     KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-    KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RGUI, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT  \
   ),
   [1] = LAYOUT(
-    KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_MUTE, \
-    _______, _______, _______,  KC_UP,  _______, _______, _______, U_T_AUTO,U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END, \
-    _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-    _______, _______, _______, _______, _______, MD_BOOT, TG_NKRO, _______, _______, _______, _______, _______,          KC_VOLU, _______, \
-    _______, _______, _______,                            KC_MPLY,                              MO(2), _______, KC_MRWD, KC_VOLD, KC_MFFD  \
+    KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_TRNS, KC_MUTE, \
+    L_T_BR,  L_PSD,   L_BRI,   L_PSI,   KC_TRNS, KC_TRNS, KC_TRNS, U_T_AUTO,U_T_AGCR,KC_TRNS, KC_PSCR, KC_SLCK, KC_PAUS, KC_TRNS, KC_END, \
+    L_T_PTD, L_PTP,   L_BRD,   L_PTN,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_VOLU, \
+    KC_TRNS, L_T_MD,  L_T_ONF, KC_TRNS, KC_TRNS, MD_BOOT, TG_NKRO, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,          KC_PGUP, KC_VOLD, \
+    KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS,                            KC_TRNS, KC_TRNS, KC_HOME, KC_PGDN, KC_END  \
   ),
-  [2] = LAYOUT(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    L_T_BR,  L_PSD,   L_BRI,   L_PSI,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    L_T_PTD, L_PTP,   L_BRD,   L_PTN,   _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-    _______, L_T_MD,  L_T_ONF, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-    _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
+  /*
+  [X] = LAYOUT(
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, \
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, \
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, \
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, \
+    KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS,                            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS  \
   ),
+  */
 };
 
 const uint16_t PROGMEM fn_actions[] = {
@@ -71,27 +71,36 @@ void matrix_scan_user(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t key_timer;
 
-  rgb_matrix_record_key_press(record);
+  keypos_t key = record->event.key;
+  uint8_t led_id = MATRIX_TO_LED_ID[key.row][key.col];
+
+  if (led_id > 0) {
+    uint8_t led_col = LED_ID_TO_KEYMAP[led_id].col;
+    uint8_t led_row = LED_ID_TO_KEYMAP[led_id].row;
+
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+
+    if (record->event.pressed) {
+      g = 255;
+      b = 125;
+    }
+
+    uint8_t row = 0;
+    while (row < KEYMAP_ROWS) {
+      rgb_matrix_set_color(KEYMAP_TO_LED_ID[row][led_col], r, g, b);
+      row += 1;
+    }
+
+    uint8_t col = 0;
+    while (col < KEYMAP_COLS) {
+      rgb_matrix_set_color(KEYMAP_TO_LED_ID[led_row][col], r, g, b);
+      col += 1;
+    }
+  }
 
   switch (keycode) {
-    case L_T_ONF:
-      if (record->event.pressed) {
-        led_enabled = !led_enabled;
-        I2C3733_Control_Set(led_enabled);
-      }
-      return false;
-    case L_ON:
-      if (record->event.pressed) {
-        led_enabled = 1;
-        I2C3733_Control_Set(led_enabled);
-      }
-      return false;
-    case L_OFF:
-      if (record->event.pressed) {
-        led_enabled = 0;
-        I2C3733_Control_Set(led_enabled);
-      }
-      return false;
     case U_T_AUTO:
       if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
         TOGGLE_FLAG_AND_PRINT(usb_extra_manual, "USB extra port manual mode");

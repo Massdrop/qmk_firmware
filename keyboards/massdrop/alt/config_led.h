@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define V5_LOW                      2480        //5V low level (LED power rolled back to stay above this limit)
 #define V5_CAT                      2200        //5V catastrophic level (Host USB port potential to shut down)
 
-#define ANIMATION_SPEED_STEP        1
+#define ANIMATION_SPEED_STEP        1.1
 
 #define BREATHE_MIN_STEP            0
 #define BREATHE_MAX_STEP            255
