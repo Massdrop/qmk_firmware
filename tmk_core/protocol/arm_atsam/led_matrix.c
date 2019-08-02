@@ -349,33 +349,9 @@ void led_matrix_indicators(void)
             #endif //KANA
             (0))
             {
-                if ((led_buffer[i].r == 255) && (led_buffer[i].g == 255) && (led_buffer[i].b == 255))
-                {
-                    led_buffer[i].r = 255 - led_buffer[i].r;
-                    led_buffer[i].g = 255 - led_buffer[i].g;
-                    led_buffer[i].b = 255 - led_buffer[i].b;
-                }
-                if ((led_buffer[i].r > 127) && (led_buffer[i].g > 127) && (led_buffer[i].b > 127))
-                {
-                    led_buffer[i].r = 255;
-                    led_buffer[i].g = 255;
-                    led_buffer[i].b = 255;
-                    led_buffer[i].r = 255 - led_buffer[i].r;
-                    led_buffer[i].g = 255 - led_buffer[i].g;
-                    led_buffer[i].b = 255 - led_buffer[i].b;
-                }
-                else
-                {
-                    led_buffer[i].r = 255 - led_buffer[i].r;
-                    led_buffer[i].g = 255 - led_buffer[i].g;
-                    led_buffer[i].b = 255 - led_buffer[i].b;
-                }
-                if ((led_buffer[i].r == 0) && (led_buffer[i].g == 0) && (led_buffer[i].b == 0))
-                {
-                    led_buffer[i].r = 255;
-                    led_buffer[i].g = 255;
-                    led_buffer[i].b = 255;
-                }
+                led_buffer[i].r = ~led_buffer[i].r;
+                led_buffer[i].g = ~led_buffer[i].b;
+                led_buffer[i].b = ~led_buffer[i].g;
             }
         }
     }
