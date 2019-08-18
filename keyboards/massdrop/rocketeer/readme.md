@@ -4,7 +4,7 @@
 
 The Massdrop x zslane Mercury Rocketeer Keyboard is a 60% mechanical keyboard featuring dual USB-C connectors, an integrated Hi-Speed USB 2.0 hub, and fully customizable RGB backlighting (and underlighting).
 
-Designer: zslane
+Designer: zslane  
 Keyboard Maintainer: [Drop / Massdrop](https://github.com/Massdrop/qmk_firmware)  
 Hardware Supported: Massdrop, Inc. Rocketeer PCBs utilizing Microchip's ATSAMD51J18A MCU and USB2422 2-Port USB 2.0 Hi-Speed Hub Controller, and ISSI's IS31FL3733 LED Drivers.  
 Hardware Availability: [Massdrop x zslane Mercury Rocketeer Keyboard](https://drop.com/buy/massdrop-x-zslane-mercury-rocketeer-mechanical-keyboard)
