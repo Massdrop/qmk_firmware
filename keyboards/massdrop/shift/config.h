@@ -24,8 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT_ID          0xEE65
 #define DEVICE_VER          0x0100
 
-#define MANUFACTURER        "Massdrop Inc."
-#define PRODUCT             "Massdrop SHIFT Keyboard"
+//#define MANUFACTURER        "Massdrop Inc."
+//#define PRODUCT             "Massdrop SHIFT Keyboard"
+#define MANUFACTURER        "Drop Inc."
+#define PRODUCT             "Drop SHIFT Keyboard"
 #define SERIAL_NUM          "Unavailable"
 
 /* key matrix size */
@@ -104,7 +106,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* PCB M44 */
 #define DEBUG_PORT1_ENABLE          1
 #define DEBUG_PORT1_PORT            PB
-#define DEBUG_PORT1_PIN             31
+//#define DEBUG_PORT1_PIN             31
+#define DEBUG_PORT1_PIN             17
 /* PCB M45 */
 #define DEBUG_PORT2_ENABLE          1
 #define DEBUG_PORT2_PORT            PB

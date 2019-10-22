@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_C1B5        2   //Connector 1 B5 CC voltage
 #define ADC_C2A5        3   //Connector 2 A5 CC voltage
 #define ADC_C2B5        4   //Connector 2 B5 CC voltage
-#define ADC_C1I         5   //Connector 1 current
-#define ADC_C2I         6   //Connector 2 current
+#define ADC_C1I         5   //Connector 1 current (unused)
+#define ADC_C2I         6   //Connector 2 current (unused)
 
 //ADC_PORT: PORT of the PIN on the MCU (Ex: 0 = PA, 1 = PB, ...)
 //          Set ADC_PORT to ADC_NA if it is not available for use
@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_CONFIG_C1I  0,      10, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN10_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_4_Val,    45
 #define ADC_CONFIG_C2I  0,      11, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN11_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_4_Val,    45
 
-//Conversion values dependant upon the circuitry
+//Conversion values dependent upon the circuitry
 #define ADC_I_MILLIAMPS_PER_COUNT   -0.000980472f
 #define ADC_I_MILLIAMPS_OFFSET      1.979711769f
 #define ADC_5V_VOLTS_PER_COUNT      0.001904297f
