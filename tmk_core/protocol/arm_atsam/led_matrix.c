@@ -332,6 +332,7 @@ void led_matrix_indicators(void) {
 #    ifdef USB_LED_KANA_SCANCODE
                 (led_map[i].scan == USB_LED_KANA_SCANCODE && (kbled & (1 << USB_LED_KANA))) ||
 #    endif  // KANA
+            // Dedicated LEDs (Could be done more efficiently - meh)
                 (0)) {
                 led_buffer[i].r = 255 - led_buffer[i].r;
                 led_buffer[i].g = 255 - led_buffer[i].g;

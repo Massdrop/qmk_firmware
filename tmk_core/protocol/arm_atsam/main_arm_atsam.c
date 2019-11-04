@@ -238,8 +238,9 @@ int main(void) {
 
     ADC_init();
 
+#ifndef NO_MD_SR_EXT
     SR_EXP_Init();
-
+#endif
 #ifdef RGB_MATRIX_ENABLE
     i2c1_init();
 #endif  // RGB_MATRIX_ENABLE
@@ -257,9 +258,10 @@ int main(void) {
     CDC_init();
     DBGC(DC_MAIN_CDC_INIT_COMPLETE);
 
+#ifndef NO_MD_USB2422  // Do we need alternate for non HUB products?  ***TBD
     while (USB2422_Port_Detect_Init() == 0) {
     }
-
+#endif
     DBG_LED_OFF;
 
 #ifdef RGB_MATRIX_ENABLE

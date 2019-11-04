@@ -18,53 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "arm_atsam_protocol.h"
 #include <string.h>
 
-Usb2422       USB2422_shadow;
-unsigned char i2c0_buf[34];
-
-const uint16_t MFRNAME[] = {'M', 'a', 's', 's', 'd', 'r', 'o', 'p', ' ', 'I', 'n', 'c', '.'};  // Massdrop Inc.
-const uint16_t PRDNAME[] = {'M', 'a', 's', 's', 'd', 'r', 'o', 'p', ' ', 'H', 'u', 'b'};       // Massdrop Hub
 #ifndef MD_BOOTLOADER
-// Serial number reported stops before first found space character or at last found character
-const uint16_t SERNAME[] = {'U', 'n', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e'};  // Unavailable
-#else
-// In production, this field is found, modified, and offset noted as the last 32-bit word in the bootloader space
-// The offset allows the application to use the factory programmed serial (which may differ from the physical serial label)
-// Serial number reported stops before first found space character or when max size is reached
-__attribute__((__aligned__(4))) const uint16_t SERNAME[BOOTLOADER_SERIAL_MAX_SIZE] = {'M', 'D', 'H', 'U', 'B', 'B', 'O', 'O', 'T', 'L', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
-// NOTE: Serial replacer will not write a string longer than given here as a precaution, so give enough
-//      space as needed and adjust BOOTLOADER_SERIAL_MAX_SIZE to match amount given
-#endif  // MD_BOOTLOADER
-
-uint8_t g_usb_host_port;
-
-#ifndef MD_BOOTLOADER
-
 uint8_t usb_gcr_auto;
-
+usbc_t  usbc;
 #endif  // MD_BOOTLOADER
 
-void USB_write2422_block(void) {
-    unsigned char *dest = i2c0_buf;
-    unsigned char *src;
-    unsigned char *base = (unsigned char *)&USB2422_shadow;
-
-    DBGC(DC_USB_WRITE2422_BLOCK_BEGIN);
-
-    for (src = base; src < base + 256; src += 32) {
-        dest[0] = src - base;
-        dest[1] = 32;
-        memcpy(&dest[2], src, 32);
-        i2c0_transmit(USB2422_ADDR, dest, 34, 50000);
-        SERCOM0->I2CM.CTRLB.bit.CMD = 0x03;
-        while (SERCOM0->I2CM.SYNCBUSY.bit.SYSOP) {
-            DBGC(DC_USB_WRITE2422_BLOCK_SYNC_SYSOP);
-        }
-        wait_us(100);
-    }
-
-    DBGC(DC_USB_WRITE2422_BLOCK_COMPLETE);
-}
-
+// This is actually init for ATSAMD51J18A internal USB device, not USB2422 Hub
 void USB2422_init(void) {
     Gclk *   pgclk = GCLK;
     Mclk *   pmclk = MCLK;
@@ -145,21 +104,67 @@ void USB2422_init(void) {
 
     pport->Group[USB2422_HUB_ACTIVE_GROUP].PINCFG[USB2422_HUB_ACTIVE_PIN].bit.INEN = 1;
 
+#ifndef NO_MD_USB2422
     i2c0_init();  // IC2 clk must be high at USB2422 reset release time to signal SMB configuration
 
     sr_exp_data.bit.HUB_CONNECT = 1;  // connect signal high to connect
     sr_exp_data.bit.HUB_RESET_N = 1;  // reset high to run
     SR_EXP_WriteData();
+#endif
 
     wait_us(100);
 
 #ifndef MD_BOOTLOADER
-
     usb_gcr_auto = 1;
-
 #endif  // MD_BOOTLOADER
 
     DBGC(DC_USB2422_INIT_COMPLETE);
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// *** USB2422 HUB Support
+
+#ifndef NO_MD_USB2422
+
+Usb2422       USB2422_shadow;
+unsigned char i2c0_buf[34];
+
+const uint16_t MFRNAME[] = {'M', 'a', 's', 's', 'd', 'r', 'o', 'p', ' ', 'I', 'n', 'c', '.'};  // Massdrop Inc.
+const uint16_t PRDNAME[] = {'M', 'a', 's', 's', 'd', 'r', 'o', 'p', ' ', 'H', 'u', 'b'};       // Massdrop Hub
+#    ifndef MD_BOOTLOADER
+// Serial number reported stops before first found space character or at last found character
+const uint16_t SERNAME[] = {'U', 'n', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e'};  // Unavailable
+#    else
+// In production, this field is found, modified, and offset noted as the last 32-bit word in the bootloader space
+// The offset allows the application to use the factory programmed serial (which may differ from the physical serial label)
+// Serial number reported stops before first found space character or when max size is reached
+__attribute__((__aligned__(4))) const uint16_t SERNAME[BOOTLOADER_SERIAL_MAX_SIZE] = {'M', 'D', 'H', 'U', 'B', 'B', 'O', 'O', 'T', 'L', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
+// NOTE: Serial replacer will not write a string longer than given here as a precaution, so give enough
+//      space as needed and adjust BOOTLOADER_SERIAL_MAX_SIZE to match amount given
+#    endif  // MD_BOOTLOADER
+
+uint8_t g_usb_host_port;
+
+void USB_write2422_block(void) {
+    unsigned char *dest = i2c0_buf;
+    unsigned char *src;
+    unsigned char *base = (unsigned char *)&USB2422_shadow;
+
+    DBGC(DC_USB_WRITE2422_BLOCK_BEGIN);
+
+    for (src = base; src < base + 256; src += 32) {
+        dest[0] = src - base;
+        dest[1] = 32;
+        memcpy(&dest[2], src, 32);
+        i2c0_transmit(USB2422_ADDR, dest, 34, 50000);
+        SERCOM0->I2CM.CTRLB.bit.CMD = 0x03;
+        while (SERCOM0->I2CM.SYNCBUSY.bit.SYSOP) {
+            DBGC(DC_USB_WRITE2422_BLOCK_SYNC_SYSOP);
+        }
+        wait_us(100);
+    }
+
+    DBGC(DC_USB_WRITE2422_BLOCK_COMPLETE);
 }
 
 void USB_reset(void) {
@@ -183,11 +188,11 @@ void USB_configure(void) {
 
     uint16_t *serial_use    = (uint16_t *)SERNAME;                 // Default to use SERNAME from this file
     uint8_t   serial_length = sizeof(SERNAME) / sizeof(uint16_t);  // Default to use SERNAME from this file
-#ifndef MD_BOOTLOADER
+#    ifndef MD_BOOTLOADER
     uint32_t serial_ptrloc = (uint32_t)&_srom - 4;
-#else                                                      // MD_BOOTLOADER
+#    else                                                  // MD_BOOTLOADER
     uint32_t serial_ptrloc = (uint32_t)&_erom - 4;
-#endif                                                     // MD_BOOTLOADER
+#    endif                                                 // MD_BOOTLOADER
     uint32_t serial_address = *(uint32_t *)serial_ptrloc;  // Address of bootloader's serial number if available
 
     DBGC(DC_USB_CONFIGURE_BEGIN);
@@ -231,10 +236,10 @@ void USB_configure(void) {
 
 uint16_t USB_active(void) { return (PORT->Group[USB2422_HUB_ACTIVE_GROUP].IN.reg & (1 << USB2422_HUB_ACTIVE_PIN)) != 0; }
 
-#define USB_DETECT_INIT_VAL 100  // Default value for rp/cc detection to test against after routines
-#define USB_DETECT_METHOD_NONE 0
-#define USB_DETECT_METHOD_RP 1
-#define USB_DETECT_METHOD_V 2
+#    define USB_DETECT_INIT_VAL 100  // Default value for rp/cc detection to test against after routines
+#    define USB_DETECT_METHOD_NONE 0
+#    define USB_DETECT_METHOD_RP 1
+#    define USB_DETECT_METHOD_V 2
 
 // Return best Rp value match
 uint8_t USB_detect_host(void) {
@@ -270,7 +275,7 @@ uint8_t USB_detect_host(void) {
         cc_readings[cc_index] = ADC_CC_5VCOR(adc_get(ADC_5V), cc_readings[cc_index]);  // Correct the ADC reading according to 5V bus
     }
 
-#ifdef ADC_USBC_RP_DELTA_MAX
+#    ifdef ADC_USBC_RP_DELTA_MAX
     if (detect_method == USB_DETECT_METHOD_NONE) {  // If a detection method has not succeeded yet
         // Using CC readings, test them for onb or ext
         uint16_t rp_delta_least = 5000;                // Initialize to a high number out of ADC range
@@ -303,7 +308,7 @@ uint8_t USB_detect_host(void) {
             }
         }
     }
-#endif
+#    endif
 
     // Detect highest voltage port and test onboard or external
     if (detect_method == USB_DETECT_METHOD_NONE) {                 // If a detection method has not succeeded yet
@@ -350,12 +355,12 @@ uint8_t USB2422_Port_Detect_Init(void) {
 
     DBGC(DC_PORT_DETECT_INIT_BEGIN);
 
-#ifdef ADC_USBC_IS_EXT
+#    ifdef ADC_USBC_IS_EXT
     // If the keyboard supports offboard USB extenders, rp_best_index is used to determine onboard/offboard usage
     uint8_t rp_best_index = USB_detect_host();
-#else
+#    else
     USB_detect_host();
-#endif
+#    endif
 
     port_detect_fail_ms         = timer_read64() + PORT_DETECT_RETRY_START + port_detect_retry_ms;
     uint32_t port_flash_counter = timer_read();
@@ -370,14 +375,14 @@ uint8_t USB2422_Port_Detect_Init(void) {
                     led_state = 1;
                 }
             }
-#ifdef ADC_USBC_IS_EXT
+#    ifdef ADC_USBC_IS_EXT
             else if (ADC_USBC_IS_EXT(rp_best_index) && tmod > 1000 && tmod < 1500) {
                 if (!led_state) {
                     DBG_LED_ON;
                     led_state = 1;
                 }
             }
-#endif
+#    endif
             else if (led_state) {
                 DBG_LED_OFF;
                 led_state = 0;
@@ -395,14 +400,14 @@ uint8_t USB2422_Port_Detect_Init(void) {
                     led_state = 1;
                 }
             }
-#ifdef ADC_USBC_IS_EXT
+#    ifdef ADC_USBC_IS_EXT
             else if (ADC_USBC_IS_EXT(rp_best_index) && tmod > 1000 && tmod < 1500) {
                 if (!led_state) {
                     DBG_LED_ON;
                     led_state = 1;
                 }
             }
-#endif
+#    endif
             else if (led_state) {
                 DBG_LED_OFF;
                 led_state = 0;
@@ -440,9 +445,7 @@ uint8_t USB2422_Port_Detect_Init(void) {
     return 1;
 }
 
-#ifndef MD_BOOTLOADER
-
-usbc_t usbc;
+#    ifndef MD_BOOTLOADER
 
 uint16_t usbc_cc_a5_v;
 uint16_t usbc_cc_b5_v;
@@ -549,7 +552,7 @@ void usbc_disable(void) {
 }
 
 // This macro updates the timer and returns true if timer is complete
-#    define USBC_TIMER_DONE (0 == (usbc.timer = (usbc.timer > USBC_CFG_PERIOD ? usbc.timer - USBC_CFG_PERIOD : 0)))
+#        define USBC_TIMER_DONE (0 == (usbc.timer = (usbc.timer > USBC_CFG_PERIOD ? usbc.timer - USBC_CFG_PERIOD : 0)))
 
 void usbc_task(void) {
     if (usbc.state == USB_STATE_UNATTACHED_SRC) {
@@ -643,4 +646,39 @@ void usbc_task(void) {
 
 void USB_HandleExtraDevice(void) { usbc_task(); }
 
-#endif  // MD_BOOTLOADER
+#    endif  // MD_BOOTLOADER
+
+#else
+
+// *** STUB these for now for non HUB products.  Full implementation ***TBD
+uint16_t usbc_cc_a5_v;
+uint16_t usbc_cc_b5_v;
+float    usbc_cc_a5_v_avg;
+float    usbc_cc_b5_v_avg;
+
+void usbc_cc_clear(void) {
+    usbc_cc_a5_v     = 0;
+    usbc_cc_b5_v     = 0;
+    usbc_cc_a5_v_avg = 0.0f;
+    usbc_cc_b5_v_avg = 0.0f;
+}
+
+void USB_HandleExtraDevice(void) { usbc_task(); }
+
+void usbc_enable(void) {
+    usbc.state = USB_STATE_UNATTACHED_WAIT_SRC;  // Set starting state to discharge wait
+    usbc.timer = USBC_CFG_TVCONNDISCHARGE;       // Set timer for 5V bus discharge
+    usbc_cc_clear();
+}
+
+void usbc_disable(void) {
+    usbc.state = USB_STATE_DISABLED_WAIT;   // Set disabled waiting state
+    usbc.timer = USBC_CFG_TVCONNDISCHARGE;  // Set timer for 5V bus discharge
+    usbc_cc_clear();                        // Clear CC readings
+}
+
+void usbc_task(void) {
+    // ***TBD
+}
+
+#endif  // NO_MD_USB2422

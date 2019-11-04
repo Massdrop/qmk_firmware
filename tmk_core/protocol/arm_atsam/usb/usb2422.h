@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USB2422_ADDR 0x58  // I2C device address, one instance
 
 #define USB2422_HUB_ACTIVE_GROUP 0  // PA
-#define USB2422_HUB_ACTIVE_PIN 18   // 18
+#define USB2422_HUB_ACTIVE_PIN 18   // 18	<- Hard code alert! ***FIXME
 
 /* -------- USB2422_VID : (USB2422L Offset: 0x00) (R/W 16) Vendor ID -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -407,10 +407,10 @@ typedef struct {
 
 #define USB_STATE_UNKNOWN 0  // Custom state for init
 #define USB_STATE_UNATTACHED_SRC \
-    1  // Directed from any state
-       // From USB_STATE_UNATTACHED_WAIT_SRC after Discharge Complete and Vconn Off
-       // From USB_STATE_ATTACHED_SRC if Sink Removed and Vconn was Off
-       // From USB_STATE_ATTACH_WAIT_SRC if Connection Removed
+    1                                        // Directed from any state
+                                             // From USB_STATE_UNATTACHED_WAIT_SRC after Discharge Complete and Vconn Off
+                                             // From USB_STATE_ATTACHED_SRC if Sink Removed and Vconn was Off
+                                             // From USB_STATE_ATTACH_WAIT_SRC if Connection Removed
 #define USB_STATE_ATTACH_WAIT_SRC 2          // From USB_STATE_UNATTACHED_SRC when Connection detected
 #define USB_STATE_ATTACHED_SRC 3             // From USB_STATE_ATTACHWAIT_SRC when Vbus at vSafe0V and Sink Detected for tCCDebounce
 #define USB_STATE_UNATTACHED_WAIT_SRC 4      // From USB_STATE_ATTACHED_SRC when Sink Removed and Vconn was On

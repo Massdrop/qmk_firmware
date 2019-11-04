@@ -24,39 +24,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_MACRO_CONCAT(str, var) str##var
 #define SPI_MACRO_EXPAND(str, var) SPI_MACRO_CONCAT(str, var)
 
+#ifndef NO_MD_SR_EXT
+
 /* Macros to define Shift Register macro (Ex: SERCOM2) */
-#define SR_EXP_SERCOM SPI_MACRO_EXPAND(SERCOM, SR_EXP_SERCOM_NUM)
+#    define SR_EXP_SERCOM SPI_MACRO_EXPAND(SERCOM, SR_EXP_SERCOM_NUM)
 
 /* Macros to define Shift Register Peripheral ID (Ex: ID_SERCOM2) */
-#define SR_EXP_SERCOM_PID SPI_MACRO_EXPAND(ID_SERCOM, SR_EXP_SERCOM_NUM)
+#    define SR_EXP_SERCOM_PID SPI_MACRO_EXPAND(ID_SERCOM, SR_EXP_SERCOM_NUM)
 
 /* Macros for Shift Register control */
-#define SR_EXP_RCLK_LO PORT->Group[SR_EXP_RCLK_PORT].OUTCLR.reg = (1 << SR_EXP_RCLK_PIN)
-#define SR_EXP_RCLK_HI PORT->Group[SR_EXP_RCLK_PORT].OUTSET.reg = (1 << SR_EXP_RCLK_PIN)
-#define SR_EXP_OE_N_ENA PORT->Group[SR_EXP_OE_N_PORT].OUTCLR.reg = (1 << SR_EXP_OE_N_PIN)
-#define SR_EXP_OE_N_DIS PORT->Group[SR_EXP_OE_N_PORT].OUTSET.reg = (1 << SR_EXP_OE_N_PIN)
+#    define SR_EXP_RCLK_LO PORT->Group[SR_EXP_RCLK_PORT].OUTCLR.reg = (1 << SR_EXP_RCLK_PIN)
+#    define SR_EXP_RCLK_HI PORT->Group[SR_EXP_RCLK_PORT].OUTSET.reg = (1 << SR_EXP_RCLK_PIN)
+#    define SR_EXP_OE_N_ENA PORT->Group[SR_EXP_OE_N_PORT].OUTCLR.reg = (1 << SR_EXP_OE_N_PIN)
+#    define SR_EXP_OE_N_DIS PORT->Group[SR_EXP_OE_N_PORT].OUTSET.reg = (1 << SR_EXP_OE_N_PIN)
 
 /* Determine bits to set for mux selection */
-#if SR_EXP_DATAOUT_PIN % 2 == 0
-#    define SR_EXP_DATAOUT_MUX_SEL PMUXE
-#else
-#    define SR_EXP_DATAOUT_MUX_SEL PMUXO
-#endif
+#    if SR_EXP_DATAOUT_PIN % 2 == 0
+#        define SR_EXP_DATAOUT_MUX_SEL PMUXE
+#    else
+#        define SR_EXP_DATAOUT_MUX_SEL PMUXO
+#    endif
 
 /* Determine bits to set for mux selection */
-#if SR_EXP_SCLK_PIN % 2 == 0
-#    define SR_EXP_SCLK_MUX_SEL PMUXE
-#else
-#    define SR_EXP_SCLK_MUX_SEL PMUXO
-#endif
+#    if SR_EXP_SCLK_PIN % 2 == 0
+#        define SR_EXP_SCLK_MUX_SEL PMUXE
+#    else
+#        define SR_EXP_SCLK_MUX_SEL PMUXO
+#    endif
 
 // Note: sr_exp_t struct defined in keyboard's config_spi.h
-
 extern sr_exp_t sr_exp_data;
 
 void SR_EXP_WriteData(void);
 void SR_EXP_Init(void);
 void SR_EXP_Init_kb(void);
+
+#endif  // #ifndef NO_MD_SR_EXT
 
 // For devices which use two shift registers for key matrix column drive
 #ifdef SR_KC_SERCOM_NUM

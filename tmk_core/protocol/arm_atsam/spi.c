@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "arm_atsam_protocol.h"
 
+#ifndef NO_MD_SR_EXT
+
 /* Shift Register output EXPander Data */
 sr_exp_t sr_exp_data;
 
@@ -64,6 +66,7 @@ void SR_EXP_Init(void) {
 
     DBGC(DC_SPI_EXP_INIT_COMPLETE);
 }
+#endif  // NO_MD_SR_EXT
 
 #ifdef SR_KC_SERCOM_NUM
 
