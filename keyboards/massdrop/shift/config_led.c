@@ -222,15 +222,16 @@ led_config_t g_led_config = {
 		2, 2, 2, 2,
 
  // NCS Indicators (3)
-		0, 0, 0
+		//0, 0, 0
+		2, 2, 2
   }
 };
 
-#ifdef USB_LED_INDICATOR_ENABLE
+#if defined(USB_LED_INDICATOR_ENABLE) || defined(DEDICATED_LED_INDICATOR_ENABLE)
 void rgb_matrix_indicators_kb(void)
 {
   led_matrix_indicators();
 }
-#endif // USB_LED_INDICATOR_ENABLE
+#endif // USB_LED_INDICATOR_ENABLE || DEDICATED_LED_INDICATOR_ENABLE
 
 #endif

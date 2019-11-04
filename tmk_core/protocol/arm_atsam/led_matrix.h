@@ -83,6 +83,10 @@ extern uint8_t gcr_desired;
 extern uint8_t gcr_breathe;
 extern uint8_t gcr_actual;
 extern uint8_t gcr_actual_last;
+extern uint8_t led_mfg_test_mode;
+
+#define LED_MFG_TEST_MODE_OFF 0
+#define LED_MFG_TEST_MODE_ON 1
 
 void gcr_compute(void);
 

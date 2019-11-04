@@ -117,12 +117,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case L_PTN:
             if (record->event.pressed) {
+            	led_mfg_test_mode = LED_MFG_TEST_MODE_OFF;
                 if (led_animation_id == led_setups_count - 1) led_animation_id = 0;
                 else led_animation_id++;
             }
             return false;
         case L_PTP:
             if (record->event.pressed) {
+            	led_mfg_test_mode = LED_MFG_TEST_MODE_OFF;
                 if (led_animation_id == 0) led_animation_id = led_setups_count - 1;
                 else led_animation_id--;
             }
@@ -207,6 +209,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case DBG_FAC:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
+            	led_mfg_test_mode = LED_MFG_TEST_MODE_ON;
                 led_lighting_mode = LED_MODE_NORMAL;
                 led_edge_brightness = 1;
                 led_edge_mode = LED_EDGE_MODE_ALL;

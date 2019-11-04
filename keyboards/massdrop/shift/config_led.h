@@ -233,11 +233,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  { .id = 169, .x = 11.537, .y = 4.383, .adr = { .drv = 2, .cs = 3,  .swr = 5,  .swg = 4,  .swb = 6  }, .scan = 254 } \
 };
 
-#define USB_LED_INDICATOR_ENABLE    //Comment out to disable indicator functionality
+//#define USB_LED_INDICATOR_ENABLE    //Comment out to disable indicator functionality
 #ifdef USB_LED_INDICATOR_ENABLE     //Scan codes refer to actual key matrix codes, not KC_*
     #define USB_LED_NUM_LOCK_SCANCODE       41
     #define USB_LED_CAPS_LOCK_SCANCODE      48
-    #define USB_LED_SCROLL_LOCK_SCANCODE    28
+    //#define USB_LED_SCROLL_LOCK_SCANCODE    255
     //#define USB_LED_COMPOSE_SCANCODE        255
     //#define USB_LED_KANA_SCANCODE           255
 #endif //USB_LED_INDICATOR_ENABLE
