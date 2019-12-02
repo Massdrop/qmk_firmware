@@ -277,6 +277,7 @@ uint8_t I2C3733_Init_Control(void) {
     IRST_ENABLE;
     IRST_OFF;  // Reset active high
     SDB_ENABLE;
+    SDB_ENABLEIN;
     SDB_OFF;
 #    else
     sr_exp_data.bit.IRST = 0;
@@ -316,7 +317,7 @@ uint8_t I2C3733_Init_Drivers(void) {
 
         i2c_led_send_CRWL(drvid);
         i2c_led_select_page(drvid, 3);
-        i2c_led_send_pur_pdr(drvid, ISSI3733_SWYR_PUR_8000, ISSI3733_CSXR_PDR_8000);
+        i2c_led_send_pur_pdr(drvid, ISSI3733_SWYR_PUR_8000, ISSI3733_CSXR_PDR_8000);  // SWy 8K pullup, CSx 8K pulldown
     }
 
     DBGC(DC_I2C3733_INIT_DRIVERS_COMPLETE);
@@ -391,8 +392,8 @@ void I2C3733_Control_Set(uint8_t state) {
     DBGC(DC_I2C3733_CONTROL_SET_COMPLETE);
 }
 
-// Return 1 if enabled
-// Return 0 if disabled
+// Return 1 if enabled (SDB=1)
+// Return 0 if disabled (SDB=0)
 uint8_t I2C3733_Control_Get(void) {
 #    ifdef SDB_PORT
     return (SDB_IN());
@@ -521,6 +522,7 @@ uint8_t i2c_led_q_request_room(uint8_t request_size) {
 }
 
 uint8_t i2c_led_q_run(void) {
+    // DBG_LED_ON;
     if (i2c_led_q_isempty()) {
         i2c_led_q_running = 0;
         return 0;
@@ -585,6 +587,7 @@ uint8_t i2c_led_q_run(void) {
 
     i2c_led_q_running = 0;
 #    endif
+    // DBG_LED_OFF;
 
     return 1;
 }

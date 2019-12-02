@@ -100,6 +100,7 @@ __attribute__((weak)) void ADC_init(void) {
 
         DBGC(DC_ADC_INIT_COMPLETE);
     }
+    wait_ms(1);  // to fix adc init race condition
 }
 
 __attribute__((weak)) void ADC_configure(uint8_t adc_index) {

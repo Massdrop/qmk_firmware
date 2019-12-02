@@ -53,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SDB_PORT					PB
 #define SDB_PIN						11
 #define SDB_ENABLE PORT->Group[SDB_PORT].DIRSET.reg = (1 << SDB_PIN)
+#define SDB_ENABLEIN PORT->Group[SDB_PORT].PINCFG[SDB_PIN].bit.INEN = 1
 #define SDB_ON  PORT->Group[SDB_PORT].OUTSET.reg = (1 << SDB_PIN)
 #define SDB_OFF PORT->Group[SDB_PORT].OUTCLR.reg = (1 << SDB_PIN)
 #define SDB_IN()  ((PORT->Group[SDB_PORT].IN.reg & (1 << SDB_PIN)) != 0)

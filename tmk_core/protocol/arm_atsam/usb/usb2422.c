@@ -23,6 +23,18 @@ uint8_t usb_gcr_auto;
 usbc_t  usbc;
 #endif  // MD_BOOTLOADER
 
+#ifndef MD_BOOTLOADER
+// Serial number reported stops before first found space character or at last found character
+const uint16_t SERNAME[] = {'U', 'n', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e'};  // Unavailable
+#else
+// In production, this field is found, modified, and offset noted as the last 32-bit word in the bootloader space
+// The offset allows the application to use the factory programmed serial (which may differ from the physical serial label)
+// Serial number reported stops before first found space character or when max size is reached
+__attribute__((__aligned__(4))) __attribute__((used)) const uint16_t SERNAME[BOOTLOADER_SERIAL_MAX_SIZE] = {'M', 'D', 'H', 'U', 'B', 'B', 'O', 'O', 'T', 'L', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
+// NOTE: Serial replacer will not write a string longer than given here as a precaution, so give enough
+//      space as needed and adjust BOOTLOADER_SERIAL_MAX_SIZE to match amount given
+#endif  // MD_BOOTLOADER
+
 // This is actually init for ATSAMD51J18A internal USB device, not USB2422 Hub
 void USB2422_init(void) {
     Gclk *   pgclk = GCLK;
@@ -32,6 +44,13 @@ void USB2422_init(void) {
     Usb *    pusb  = USB;
 
     DBGC(DC_USB2422_INIT_BEGIN);
+
+#ifdef MD_BOOTLOADER
+    uint8_t kludge = strlen((const char *)SERNAME);
+
+    if (kludge > 0)  // A kludge to prevent optimization/elimination of SERNAME
+        DBGC(DC_USB2422_INIT_BEGIN);
+#endif
 
     while (adc_get(ADC_5V) < ADC_5V_V2C(ADC_5V_START_LEVEL)) {
         DBGC(DC_USB2422_INIT_WAIT_5V_LOW);
@@ -131,17 +150,6 @@ unsigned char i2c0_buf[34];
 
 const uint16_t MFRNAME[] = {'M', 'a', 's', 's', 'd', 'r', 'o', 'p', ' ', 'I', 'n', 'c', '.'};  // Massdrop Inc.
 const uint16_t PRDNAME[] = {'M', 'a', 's', 's', 'd', 'r', 'o', 'p', ' ', 'H', 'u', 'b'};       // Massdrop Hub
-#    ifndef MD_BOOTLOADER
-// Serial number reported stops before first found space character or at last found character
-const uint16_t SERNAME[] = {'U', 'n', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e'};  // Unavailable
-#    else
-// In production, this field is found, modified, and offset noted as the last 32-bit word in the bootloader space
-// The offset allows the application to use the factory programmed serial (which may differ from the physical serial label)
-// Serial number reported stops before first found space character or when max size is reached
-__attribute__((__aligned__(4))) const uint16_t SERNAME[BOOTLOADER_SERIAL_MAX_SIZE] = {'M', 'D', 'H', 'U', 'B', 'B', 'O', 'O', 'T', 'L', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
-// NOTE: Serial replacer will not write a string longer than given here as a precaution, so give enough
-//      space as needed and adjust BOOTLOADER_SERIAL_MAX_SIZE to match amount given
-#    endif  // MD_BOOTLOADER
 
 uint8_t g_usb_host_port;
 

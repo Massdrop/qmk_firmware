@@ -39,11 +39,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_P0,            KC_PDOT, KC_PENT  \
     ),
     [1] = LAYOUT(
-    	U_T_AGCR,_______, _______, _______, \
+    	U_T_AGCR,_______, L_T_PTD, KC_DEL,  \
         KC_MPLY, KC_MSTP, KC_VOLU, KC_MUTE, \
         KC_MPRV, KC_MNXT, KC_VOLD,          \
-        _______, _______, _______, _______, \
-        _______, _______, _______,          \
+		L_PTN,   L_PTP  , L_PSI,   DBG_TOG, \
+		L_BRI,   L_BRD,   L_PSD,            \
 		MD_BOOT,          TG_NKRO, DBG_FAC  \
     ),
     /*
@@ -200,7 +200,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case DBG_FAC:
-            if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
+            if (1 /*record->event.pressed && MODS_SHIFT && MODS_CTRL*/) {
                 led_lighting_mode = LED_MODE_NORMAL;
                 led_edge_brightness = 1;
                 led_edge_mode = LED_EDGE_MODE_ALL;

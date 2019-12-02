@@ -45,9 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ISSI3733_GCR_DEFAULT LED_GCR_MAX
 
 //Automatic power rollback and recovery
-#define V5_HIGH                     2494        //5V high level (After low power detect, point at which LEDs are allowed to use more power )
-#define V5_LOW                      2434        //5V low level (LED power rolled back to stay above this limit)
-#define V5_CAT                      2206        //5V catastrophic level (Host USB port potential to shut down)
+#define V5_HIGH                     2494        //5V high level = 4.75V (After low power detect, point at which LEDs are allowed to use more power )
+#define V5_LOW                      2434        //5V low level = 4.634V (LED power rolled back to stay above this limit)
+#define V5_CAT                      2206        //5V catastrophic level = 4.20V (Host USB port potential to shut down)
 
 //LED Mapping - More practically generated from a spreadsheet program
 //id: ID of the LED (Sync with PCB callouts)
