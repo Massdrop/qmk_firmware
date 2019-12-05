@@ -317,7 +317,8 @@ int main(void) {
             //                            ADC_CC_5VCOR(g_v_5v, adc_get(ADC_C2A5)),
             //                            ADC_CC_5VCOR(g_v_5v, adc_get(ADC_C2B5)));
 
-            USB state and CC line monitoring dprintf("%4u %4u %4u %4u %2u %1u\n", usbc_cc_a5_v, usbc_cc_b5_v, (uint16_t)usbc_cc_a5_v_avg, (uint16_t)usbc_cc_b5_v_avg, usbc.state, usbc.state == USB_STATE_ATTACHED_SRC ? 1 : 0);
+            // USB state and CC line monitoring
+            dprintf("%4u %4u %4u %4u %2u %1u\n", usbc_cc_a5_v, usbc_cc_b5_v, (uint16_t)usbc_cc_a5_v_avg, (uint16_t)usbc_cc_b5_v_avg, usbc.state, usbc.state == USB_STATE_ATTACHED_SRC ? 1 : 0);
 
             // Power manager monitoring
             // dprintf("%4u %4u %3u %3u %3u %3u %3u\n", g_v_5v, (uint16_t)g_v_5v_avg, gcr_desired,(uint8_t)gcr_actual, gcr_actual_last, usbc.state, I2C3733_Control_Get());
