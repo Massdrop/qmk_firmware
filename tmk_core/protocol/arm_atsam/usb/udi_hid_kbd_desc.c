@@ -118,7 +118,7 @@ UDC_DESC_STORAGE udc_desc_t udc_desc = {
     .conf.bNumInterfaces      = USB_DEVICE_NB_INTERFACE,
     .conf.bConfigurationValue = 1,
     .conf.iConfiguration      = 0,
-    .conf.bmAttributes        = /* USB_CONFIG_ATTR_MUST_SET | */ USB_DEVICE_ATTR,
+    .conf.bmAttributes        = USB_CONFIG_ATTR_MUST_SET | USB_DEVICE_ATTR,
     .conf.bMaxPower           = USB_CONFIG_MAX_POWER(USB_DEVICE_POWER),
 #ifdef KBD
     .hid_kbd = UDI_HID_KBD_DESC,
