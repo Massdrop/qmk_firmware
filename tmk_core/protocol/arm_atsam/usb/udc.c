@@ -122,12 +122,11 @@ static uint8_t udc_string_product_name[] = USB_DEVICE_PRODUCT_NAME;
 #    define USB_DEVICE_SERIAL_NAME_SIZE 0
 #endif
 
-uint8_t     usb_device_serial_name_size = 0;
 #if defined USB_DEVICE_SERIAL_USE_BOOTLOADER_SERIAL
 uint8_t     bootloader_serial_number[BOOTLOADER_SERIAL_MAX_SIZE + 1] = "";
 #endif
-static const uint8_t *udc_get_string_serial_name(void) {
-#if defined           USB_DEVICE_SERIAL_USE_BOOTLOADER_SERIAL
+const uint8_t *udc_get_string_serial_name(uint8_t *length) {
+#if defined    USB_DEVICE_SERIAL_USE_BOOTLOADER_SERIAL
     uint32_t serial_ptrloc  = (uint32_t)&_srom - 4;
     uint32_t serial_address = *(uint32_t *)serial_ptrloc;  // Address of bootloader's serial number if available
 
@@ -144,14 +143,18 @@ static const uint8_t *udc_get_string_serial_name(void) {
             }
             bootloader_serial_number[serial_length] = 0;
 
-            usb_device_serial_name_size = serial_length;
+            if (length != NULL) {
+                *length = serial_length;
+            }
 
             return bootloader_serial_number;  // Use serial programmed into bootloader rom
         }
     }
 #endif
 
-    usb_device_serial_name_size = USB_DEVICE_SERIAL_NAME_SIZE;
+    if (length != NULL) {
+        *length = USB_DEVICE_SERIAL_NAME_SIZE;
+    }
 
 #if defined USB_DEVICE_SERIAL_NAME
     return (const uint8_t *)USB_DEVICE_SERIAL_NAME;  // Use serial supplied by keyboard's config.h
@@ -587,10 +590,14 @@ static bool udc_req_std_dev_get_str_desc(void) {
             str        = udc_string_product_name;
             break;
 #endif
-        case 3:
-            str        = udc_get_string_serial_name();
+        case 3: {
+            uint8_t usb_device_serial_name_size = 0;
+
+            str        = udc_get_string_serial_name(&usb_device_serial_name_size);
             str_length = usb_device_serial_name_size;
             break;
+        }
+
         default:
 #ifdef UDC_GET_EXTRA_STRING
             if (UDC_GET_EXTRA_STRING()) {

@@ -32,7 +32,7 @@ AUDIO_ENABLE = no           # Audio output on port C6
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 HD44780_ENABLE = no         # Enable support for HD44780 based LCDs (+400)
 VIRTSER_ENABLE = no         # USB Serial Driver
-RAW_ENABLE = no             # Raw device
+RAW_ENABLE = yes            # Raw device
 AUTO_SHIFT_ENABLE = no      # Auto Shift
 
 # Custom RGB matrix handling

@@ -201,7 +201,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RAW_OUT_EPNUM NEXT_OUT_EPNUM_0
 #    define UDI_HID_RAW_EP_OUT RAW_OUT_EPNUM
 #    define NEXT_OUT_EPNUM_1 (RAW_OUT_EPNUM + 1)
-#    define RAW_POLLING_INTERVAL 1
+#    define RAW_POLLING_INTERVAL 10
 #    ifndef UDI_HID_RAW_STRING_ID
 #        define UDI_HID_RAW_STRING_ID 0
 #    endif
@@ -440,11 +440,6 @@ typedef struct {
 
 #    define UDI_HID_RAW_REPORT_SIZE RAW_EPSIZE
 
-extern uint8_t udi_hid_raw_report_set[UDI_HID_RAW_REPORT_SIZE];
-
-// report buffer
-extern uint8_t udi_hid_raw_report[UDI_HID_RAW_REPORT_SIZE];
-
 COMPILER_PACK_RESET()
 
 #endif  // RAW
@@ -555,14 +550,17 @@ typedef struct {
 #ifdef KBD
     udi_hid_kbd_desc_t hid_kbd;
 #endif
+// It is important that the Raw HID interface is at a constant
+// interface number, to support Linux/OSX platforms and chrome.hid
+// If Raw HID is enabled, let it be always 1.
+#ifdef RAW
+    udi_hid_raw_desc_t hid_raw;
+#endif
 #ifdef MOU
     udi_hid_mou_desc_t hid_mou;
 #endif
 #ifdef EXK
     udi_hid_exk_desc_t hid_exk;
-#endif
-#ifdef RAW
-    udi_hid_raw_desc_t hid_raw;
 #endif
 #ifdef CON
     udi_hid_con_desc_t hid_con;

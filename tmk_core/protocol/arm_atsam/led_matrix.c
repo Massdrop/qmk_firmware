@@ -203,20 +203,32 @@ void led_matrix_prepare(void) {
 }
 
 __attribute__((weak)) void led_set_one(int i, uint8_t r, uint8_t g, uint8_t b) {
-    if (i < ISSI3733_LED_COUNT) {
+    if (led_mfg_test_mode != LED_MFG_TEST_MODE_RAWP) {
+        if (i < ISSI3733_LED_COUNT) {
 #ifdef USE_MASSDROP_CONFIGURATOR
-        led_matrix_massdrop_config_override(i);
+            led_matrix_massdrop_config_override(i);
 #else
-        led_buffer[i].r = r;
-        led_buffer[i].g = g;
-        led_buffer[i].b = b;
+            led_buffer[i].r = r;
+            led_buffer[i].g = g;
+            led_buffer[i].b = b;
 #endif  // USE_MASSDROP_CONFIGURATOR
+        }
     }
 }
 
 void led_set_all(uint8_t r, uint8_t g, uint8_t b) {
     for (uint8_t i = 0; i < ISSI3733_LED_COUNT; i++) {
         led_set_one(i, r, g, b);
+    }
+}
+
+void led_set_one_rawp(int i, uint8_t r, uint8_t g, uint8_t b) {
+    if (led_mfg_test_mode == LED_MFG_TEST_MODE_RAWP) {
+        if (i < ISSI3733_LED_COUNT) {
+            led_buffer[i].r = r;
+            led_buffer[i].g = g;
+            led_buffer[i].b = b;
+        }
     }
 }
 
@@ -316,24 +328,24 @@ void led_matrix_indicators(void) {
     if (/*kbled &&*/ rgb_matrix_config.enable) {
         for (uint8_t i = 0; i < ISSI3733_LED_COUNT; i++) {
 #ifdef USB_LED_INDICATOR_ENABLE
-            if (
+            if ((led_mfg_test_mode == LED_MFG_TEST_MODE_OFF) && (
 #    ifdef USB_LED_NUM_LOCK_SCANCODE
-                (led_map[i].scan == USB_LED_NUM_LOCK_SCANCODE && (kbled & (1 << USB_LED_NUM_LOCK))) ||
+                                                                    (led_map[i].scan == USB_LED_NUM_LOCK_SCANCODE && (kbled & (1 << USB_LED_NUM_LOCK))) ||
 #    endif  // NUM LOCK
 #    ifdef USB_LED_CAPS_LOCK_SCANCODE
-                (led_map[i].scan == USB_LED_CAPS_LOCK_SCANCODE && (kbled & (1 << USB_LED_CAPS_LOCK))) ||
+                                                                    (led_map[i].scan == USB_LED_CAPS_LOCK_SCANCODE && (kbled & (1 << USB_LED_CAPS_LOCK))) ||
 #    endif  // CAPS LOCK
 #    ifdef USB_LED_SCROLL_LOCK_SCANCODE
-                (led_map[i].scan == USB_LED_SCROLL_LOCK_SCANCODE && (kbled & (1 << USB_LED_SCROLL_LOCK))) ||
+                                                                    (led_map[i].scan == USB_LED_SCROLL_LOCK_SCANCODE && (kbled & (1 << USB_LED_SCROLL_LOCK))) ||
 #    endif  // SCROLL LOCK
 #    ifdef USB_LED_COMPOSE_SCANCODE
-                (led_map[i].scan == USB_LED_COMPOSE_SCANCODE && (kbled & (1 << USB_LED_COMPOSE))) ||
+                                                                    (led_map[i].scan == USB_LED_COMPOSE_SCANCODE && (kbled & (1 << USB_LED_COMPOSE))) ||
 #    endif  // COMPOSE
 #    ifdef USB_LED_KANA_SCANCODE
-                (led_map[i].scan == USB_LED_KANA_SCANCODE && (kbled & (1 << USB_LED_KANA))) ||
+                                                                    (led_map[i].scan == USB_LED_KANA_SCANCODE && (kbled & (1 << USB_LED_KANA))) ||
 #    endif  // KANA
-                // Dedicated LEDs (Could be done more efficiently - meh)
-                (0)) {
+            // Dedicated LEDs (Could be done more efficiently - meh)
+                                                                    (0))) {
                 led_buffer[i].r = 255 - led_buffer[i].r;
                 led_buffer[i].g = 255 - led_buffer[i].g;
                 led_buffer[i].b = 255 - led_buffer[i].b;

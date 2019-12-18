@@ -87,10 +87,12 @@ extern uint8_t led_mfg_test_mode;
 
 #define LED_MFG_TEST_MODE_OFF 0
 #define LED_MFG_TEST_MODE_ON 1
+#define LED_MFG_TEST_MODE_RAWP 2
 
 void gcr_compute(void);
 
 void led_matrix_indicators(void);
+void led_set_one_rawp(int i, uint8_t r, uint8_t g, uint8_t b);
 
 /*-------------------------  Legacy Lighting Support  ------------------------*/
 
@@ -172,9 +174,11 @@ uint32_t led_matrix_get_tick(void);
 #    define LED_EDGE_FULL_MODE 255  // LEDs configured with this scan code will always be on for edge lighting modes
 #    define LED_EDGE_ALT_MODE 254   // LEDs configured with this scan code will turn off in edge alternating mode
 #    define LED_EDGE_MIN_SCAN 254   // LEDs configured with scan code >= to this are assigned as edge LEDs
+#    define LED_INDICATOR_SCAN 253  // LEDs configured as dedicated indicators
 
-#    define LED_IS_EDGE(scan) (scan >= LED_EDGE_MIN_SCAN)      // Return true if an LED's scan value indicates an edge LED
-#    define LED_IS_EDGE_ALT(scan) (scan == LED_EDGE_ALT_MODE)  // Return true if an LED's scan value indicates an alternate edge mode LED
+#    define LED_IS_EDGE(scan) (scan >= LED_EDGE_MIN_SCAN)        // Return true if an LED's scan value indicates an edge LED
+#    define LED_IS_EDGE_ALT(scan) (scan == LED_EDGE_ALT_MODE)    // Return true if an LED's scan value indicates an alternate edge mode LED
+#    define LED_IS_INDICATOR(scan) (scan == LED_INDICATOR_SCAN)  // Return true if an LED's scan value indicates it is a dedicated Indicator
 
 #endif  // USE_MASSDROP_CONFIGURATOR
 

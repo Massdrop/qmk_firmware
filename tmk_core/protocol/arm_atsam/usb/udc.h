@@ -210,6 +210,13 @@ inline void udc_remotewakeup(void) { udd_send_remotewakeup(); }
  */
 usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
 
+/**
+ * \brief Returns Serial number string
+ *
+ * \return pointer to string
+ */
+const uint8_t *udc_get_string_serial_name(uint8_t *length);
+
 //@}
 
 /**
