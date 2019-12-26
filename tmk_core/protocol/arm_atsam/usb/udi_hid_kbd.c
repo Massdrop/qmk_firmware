@@ -643,19 +643,19 @@ static uint8_t udi_hid_raw_report_trans[UDI_HID_RAW_REPORT_SIZE];
 
 COMPILER_WORD_ALIGNED
 UDC_DESC_STORAGE udi_hid_raw_report_desc_t udi_hid_raw_report_desc = {{
-    0x06, 0xBC, 0xFF,  // Usage Page (Drop mfgr specific)
-    0x0A, 0x34, 0x02,  // Usage  (Drop mfgr specific)
-    0xA1, 0x01,        // Collection (Application)
-    0x75, 0x08,        //   Report Size (8)
-    0x15, 0x00,        //   Logical Minimum (0)
-    0x25, 0xFF,        //   Logical Maximum (255)
-    0x95, 0x40,        //     Report Count
-    0x09, 0x01,        //     Usage (Input)
-    0x81, 0x02,        //     Input (Data
-    0x95, 0x40,        //     Report Count
-    0x09, 0x02,        //     Usage (Output)
-    0x91, 0x02,        //     Output (Data
-    0xC0,              // End Collection - Consumer Control
+    0x06, 0xBC, 0xFF,		// Usage Page (Drop mfgr specific)
+    0x0A, 0x34, 0x02,		// Usage  (Drop mfgr specific)
+	0xA1, 0x01,  			// Collection (Application)
+    0x75, 0x08,              //   Report Size (8)
+    0x15, 0x00,              //   Logical Minimum (0)
+    0x25, 0xFF,              //   Logical Maximum (255)
+    0x95, 0x40,              //     Report Count
+    0x09, 0x01,              //     Usage (Input)
+    0x81, 0x02,              //     Input (Data
+    0x95, 0x40,              //     Report Count
+    0x09, 0x02,              //     Usage (Output)
+    0x91, 0x02,              //     Output (Data
+    0xC0,                    // End Collection - Consumer Control
 }};
 
 static bool udi_hid_raw_setreport(void);
@@ -668,6 +668,7 @@ __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length) {
     // and implement this function there. Leave this as weak linkage
     // so users can opt to not handle data coming in.
 }
+
 
 /**
  * \brief Enable reception of out report
@@ -682,16 +683,20 @@ bool udi_hid_raw_enable(void) {
     udi_hid_raw_protocol               = 0;
     udi_hid_raw_b_report_trans_ongoing = false;
     memset(udi_hid_raw_report, 0, UDI_HID_RAW_REPORT_SIZE);
-    if (!udi_hid_raw_report_out_enable())  // PS120919
-        return false;
+	if (!udi_hid_raw_report_out_enable())		// PS120919
+		return false;
     return UDI_HID_RAW_ENABLE_EXT();
 }
 
 void udi_hid_raw_disable(void) { UDI_HID_RAW_DISABLE_EXT(); }
 
-bool udi_hid_raw_setup(void) { return udi_hid_setup(&udi_hid_raw_rate, &udi_hid_raw_protocol, (uint8_t *)&udi_hid_raw_report_desc, udi_hid_raw_setreport); }
+bool udi_hid_raw_setup(void) {
+	return udi_hid_setup(&udi_hid_raw_rate, &udi_hid_raw_protocol, (uint8_t *)&udi_hid_raw_report_desc, udi_hid_raw_setreport);
+}
 
-uint8_t udi_hid_raw_getsetting(void) { return 0; }
+uint8_t udi_hid_raw_getsetting(void) {
+	return 0;
+}
 
 static bool udi_hid_raw_setreport(void) {
     if ((USB_HID_REPORT_TYPE_OUTPUT == (udd_g_ctrlreq.req.wValue >> 8)) && (0 == (0xFF & udd_g_ctrlreq.req.wValue)) && (UDI_HID_RAW_REPORT_SIZE == udd_g_ctrlreq.req.wLength)) {
@@ -727,26 +732,37 @@ static void udi_hid_raw_report_sent(udd_ep_status_t status, iram_size_t nb_sent,
     UNUSED(nb_sent);
     UNUSED(ep);
     udi_hid_raw_b_report_trans_ongoing = false;
-    // if (udi_hid_raw_b_report_valid) {
+    //if (udi_hid_raw_b_report_valid) {
     //    udi_hid_raw_send_report();		// retrigger if more data
     //}
 }
 
 static void udi_hid_raw_setreport_valid(void) {}
 
-static void udi_hid_raw_report_out_received(udd_ep_status_t status, iram_size_t nb_received, udd_ep_id_t ep) {
-    UNUSED(ep);
-    if (UDD_EP_TRANSFER_OK != status) return;  // Abort reception
 
-    if (sizeof(udi_hid_raw_report_out) == nb_received) {
-        // need to turn off IRQs?
-        memcpy(udi_hid_raw_report_out_cp, udi_hid_raw_report_out, sizeof(udi_hid_raw_report_out));  // Make a copy of report (necessary?)
-        raw_hid_receive(udi_hid_raw_report_out_cp, RAW_EPSIZE);
-    }
-    udi_hid_raw_report_out_enable();
+static void udi_hid_raw_report_out_received(udd_ep_status_t status,
+		iram_size_t nb_received, udd_ep_id_t ep)
+{
+	UNUSED(ep);
+	if (UDD_EP_TRANSFER_OK != status)
+		return;	// Abort reception
+
+	if (sizeof(udi_hid_raw_report_out) == nb_received) {
+		// need to turn off IRQs?
+		memcpy( udi_hid_raw_report_out_cp, udi_hid_raw_report_out, sizeof(udi_hid_raw_report_out ));	// Make a copy of report (necessary?)
+		raw_hid_receive( udi_hid_raw_report_out_cp, RAW_EPSIZE );
+	}
+	udi_hid_raw_report_out_enable();
 }
 
-static bool udi_hid_raw_report_out_enable(void) { return udd_ep_run(UDI_HID_RAW_EP_OUT, false, (uint8_t *)&udi_hid_raw_report_out, sizeof(udi_hid_raw_report_out), udi_hid_raw_report_out_received); }
+static bool udi_hid_raw_report_out_enable(void)
+{
+	return udd_ep_run(UDI_HID_RAW_EP_OUT,
+							false,
+							(uint8_t *) &udi_hid_raw_report_out,
+							sizeof(udi_hid_raw_report_out),
+							udi_hid_raw_report_out_received);
+}
 
 void raw_hid_send(uint8_t *data, uint8_t length) {
     uint32_t irqflags;
@@ -755,20 +771,20 @@ void raw_hid_send(uint8_t *data, uint8_t length) {
         return;
     }
 
-    while (udi_hid_raw_b_report_trans_ongoing) {
-    }  // Wait for any previous transfers to complete
+	while (udi_hid_raw_b_report_trans_ongoing) {
+	}  // Wait for any previous transfers to complete
 
-    irqflags = __get_PRIMASK();
-    __disable_irq();
-    __DMB();
+	irqflags = __get_PRIMASK();
+	__disable_irq();
+	__DMB();
 
-    memcpy(udi_hid_raw_report, data, length);  // Copy data into the send buffer
+	memcpy(udi_hid_raw_report, data, length);  // Copy data into the send buffer
 
-    // udi_hid_raw_b_report_valid = 1;  // Set report valid
-    udi_hid_raw_send_report(length);  // Send report
+	//udi_hid_raw_b_report_valid = 1;  // Set report valid
+	udi_hid_raw_send_report(length);       // Send report
 
-    __DMB();
-    __set_PRIMASK(irqflags);
+	__DMB();
+	__set_PRIMASK(irqflags);
 }
 
 #endif  // RAW
@@ -890,3 +906,4 @@ static void udi_hid_con_report_sent(udd_ep_status_t status, iram_size_t nb_sent,
 static void udi_hid_con_setreport_valid(void) {}
 
 #endif  // CON
+

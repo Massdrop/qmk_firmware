@@ -125,8 +125,8 @@ static uint8_t udc_string_product_name[] = USB_DEVICE_PRODUCT_NAME;
 #if defined USB_DEVICE_SERIAL_USE_BOOTLOADER_SERIAL
 uint8_t     bootloader_serial_number[BOOTLOADER_SERIAL_MAX_SIZE + 1] = "";
 #endif
-const uint8_t *udc_get_string_serial_name(uint8_t *length) {
-#if defined    USB_DEVICE_SERIAL_USE_BOOTLOADER_SERIAL
+const uint8_t *udc_get_string_serial_name(uint8_t * length) {
+#if defined           USB_DEVICE_SERIAL_USE_BOOTLOADER_SERIAL
     uint32_t serial_ptrloc  = (uint32_t)&_srom - 4;
     uint32_t serial_address = *(uint32_t *)serial_ptrloc;  // Address of bootloader's serial number if available
 
@@ -143,8 +143,9 @@ const uint8_t *udc_get_string_serial_name(uint8_t *length) {
             }
             bootloader_serial_number[serial_length] = 0;
 
-            if (length != NULL) {
-                *length = serial_length;
+            if( length != NULL)
+            {
+            	*length = serial_length;
             }
 
             return bootloader_serial_number;  // Use serial programmed into bootloader rom
@@ -152,8 +153,9 @@ const uint8_t *udc_get_string_serial_name(uint8_t *length) {
     }
 #endif
 
-    if (length != NULL) {
-        *length = USB_DEVICE_SERIAL_NAME_SIZE;
+    if( length != NULL)
+    {
+    	*length = USB_DEVICE_SERIAL_NAME_SIZE;
     }
 
 #if defined USB_DEVICE_SERIAL_NAME
@@ -590,8 +592,9 @@ static bool udc_req_std_dev_get_str_desc(void) {
             str        = udc_string_product_name;
             break;
 #endif
-        case 3: {
-            uint8_t usb_device_serial_name_size = 0;
+        case 3:
+        {
+        	uint8_t     usb_device_serial_name_size=0;
 
             str        = udc_get_string_serial_name(&usb_device_serial_name_size);
             str_length = usb_device_serial_name_size;

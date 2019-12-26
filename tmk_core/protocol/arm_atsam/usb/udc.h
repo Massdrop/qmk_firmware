@@ -215,7 +215,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * \return pointer to string
  */
-const uint8_t *udc_get_string_serial_name(uint8_t *length);
+const uint8_t *udc_get_string_serial_name(uint8_t * length);
 
 //@}
 

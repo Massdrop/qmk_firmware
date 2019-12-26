@@ -44,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_MPRV, KC_MNXT, KC_VOLD,          \
 		L_PTN,   L_PTP  , L_PSI,   DBG_TOG, \
 		L_BRI,   L_BRD,   L_PSD,            \
-		MD_BOOT,          TG_NKRO, DBG_FAC  \
+		MD_BOOT,          TG_NKRO, L_T_PTD  \
     ),
     /*
     [X] = LAYOUT(
@@ -195,7 +195,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         case U_T_AGCR:
-            if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
+            if (1 /*record->event.pressed && MODS_SHIFT && MODS_CTRL*/) {
                 TOGGLE_FLAG_AND_PRINT(usb_gcr_auto, "USB GCR auto mode");
             }
             return false;
