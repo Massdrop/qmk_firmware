@@ -47,6 +47,8 @@
 #ifndef _UI_H_
 #define _UI_H_
 
+#include <stdbool.h>
+
 //! \brief Initializes the user interface
 void ui_init(void);
 
@@ -58,6 +60,9 @@ void ui_wakeup_enable(void);
 
 //! \brief Disables the asynchronous interrupts of the user interface
 void ui_wakeup_disable(void);
+
+//! \brief Returns Remote Wakeup State
+bool ui_is_remotewakeup_enabled(void);
 
 //! \brief Exits the user interface of power down mode
 void ui_wakeup(void);
