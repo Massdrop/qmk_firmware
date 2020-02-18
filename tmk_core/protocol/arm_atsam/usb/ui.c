@@ -69,13 +69,19 @@ static void ui_wakeup_handler(void)
 }
 #endif
 
-void ui_init(void) { _isWakeupEnabled = true; }
+void ui_init(void) {
+	_isWakeupEnabled = true;
+}
 
 void ui_powerdown(void) {}
 
-void ui_wakeup_enable(void) { _isWakeupEnabled = true; }
+void ui_wakeup_enable(void) {
+	_isWakeupEnabled = true;
+}
 
-void ui_wakeup_disable(void) { _isWakeupEnabled = false; }
+void ui_wakeup_disable(void) {
+	_isWakeupEnabled = false;
+}
 
 void ui_wakeup(void) {}
 
@@ -83,4 +89,6 @@ void ui_process(uint16_t framenumber) {}
 
 void ui_kbd_led(uint8_t value) {}
 
-bool ui_is_remotewakeup_enabled(void) { return (_isWakeupEnabled); }
+bool ui_is_remotewakeup_enabled(void) {
+	return(_isWakeupEnabled);
+}
