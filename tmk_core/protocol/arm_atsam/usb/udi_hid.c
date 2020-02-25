@@ -133,7 +133,7 @@ static bool udi_hid_reqstdifaceget_descriptor(uint8_t *report_desc) {
     // - or USB_DT_HID_PHYSICAL descriptor
     if (USB_DT_HID == (uint8_t)(udd_g_ctrlreq.req.wValue >> 8)) {
         // USB_DT_HID descriptor requested, copy into word aligned buffer, then send it
-        memcpy(udi_hid_desc_buf, (uint8_t *)ptr_hid_desc, sizeof(usb_hid_descriptor_t));
+    	memcpy(udi_hid_desc_buf, (uint8_t *)ptr_hid_desc, sizeof(usb_hid_descriptor_t));
         udd_g_ctrlreq.payload      = udi_hid_desc_buf;
         udd_g_ctrlreq.payload_size = min(udd_g_ctrlreq.req.wLength, ptr_hid_desc->bLength);
         return true;

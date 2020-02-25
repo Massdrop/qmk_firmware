@@ -156,30 +156,31 @@ extern uint8_t led_animation_circular;
 extern float   led_edge_brightness;
 extern uint8_t led_edge_mode;
 
-extern issi3733_led_t led_map[ISSI3733_LED_COUNT];
-extern RGB            led_buffer[ISSI3733_LED_COUNT];
+extern RGB led_buffer[ISSI3733_LED_COUNT];
 
 uint32_t led_matrix_get_tick(void);
 
-#    define LED_MODE_NORMAL 0  // Must be 0
-#    define LED_MODE_KEYS_ONLY 1
-#    define LED_MODE_NON_KEYS_ONLY 2
-#    define LED_MODE_INDICATORS_ONLY 3
-#    define LED_MODE_MAX_INDEX LED_MODE_INDICATORS_ONLY  // Must be highest valued LED mode
-
-#    define LED_EDGE_MODE_ALL 0                        // All edge LEDs are active (Must be 0)
-#    define LED_EDGE_MODE_ALTERNATE 1                  // Alternate mode of edge LEDs are active (Intention is for 'only every other edge LED' to be active)
-#    define LED_EDGE_MODE_MAX LED_EDGE_MODE_ALTERNATE  // Must be the highest valued LED edge mode
-
-#    define LED_EDGE_FULL_MODE 255  // LEDs configured with this scan code will always be on for edge lighting modes
-#    define LED_EDGE_ALT_MODE 254   // LEDs configured with this scan code will turn off in edge alternating mode
-#    define LED_EDGE_MIN_SCAN 254   // LEDs configured with scan code >= to this are assigned as edge LEDs
-#    define LED_INDICATOR_SCAN 253  // LEDs configured as dedicated indicators
-
-#    define LED_IS_EDGE(scan) (scan >= LED_EDGE_MIN_SCAN)        // Return true if an LED's scan value indicates an edge LED
-#    define LED_IS_EDGE_ALT(scan) (scan == LED_EDGE_ALT_MODE)    // Return true if an LED's scan value indicates an alternate edge mode LED
-#    define LED_IS_INDICATOR(scan) (scan == LED_INDICATOR_SCAN)  // Return true if an LED's scan value indicates it is a dedicated Indicator
-
 #endif  // USE_MASSDROP_CONFIGURATOR
+
+extern issi3733_led_t led_map[ISSI3733_LED_COUNT];
+
+#define LED_MODE_NORMAL 0  // Must be 0
+#define LED_MODE_KEYS_ONLY 1
+#define LED_MODE_NON_KEYS_ONLY 2
+#define LED_MODE_INDICATORS_ONLY 3
+#define LED_MODE_MAX_INDEX LED_MODE_INDICATORS_ONLY  // Must be highest valued LED mode
+
+#define LED_EDGE_MODE_ALL 0                        // All edge LEDs are active (Must be 0)
+#define LED_EDGE_MODE_ALTERNATE 1                  // Alternate mode of edge LEDs are active (Intention is for 'only every other edge LED' to be active)
+#define LED_EDGE_MODE_MAX LED_EDGE_MODE_ALTERNATE  // Must be the highest valued LED edge mode
+
+#define LED_EDGE_FULL_MODE 255  // LEDs configured with this scan code will always be on for edge lighting modes
+#define LED_EDGE_ALT_MODE 254   // LEDs configured with this scan code will turn off in edge alternating mode
+#define LED_EDGE_MIN_SCAN 254   // LEDs configured with scan code >= to this are assigned as edge LEDs
+#define LED_INDICATOR_SCAN 253  // LEDs configured as dedicated indicators
+
+#define LED_IS_EDGE(scan) (scan >= LED_EDGE_MIN_SCAN)        // Return true if an LED's scan value indicates an edge LED
+#define LED_IS_EDGE_ALT(scan) (scan == LED_EDGE_ALT_MODE)    // Return true if an LED's scan value indicates an alternate edge mode LED
+#define LED_IS_INDICATOR(scan) (scan == LED_INDICATOR_SCAN)  // Return true if an LED's scan value indicates it is a dedicated Indicator
 
 #endif  //_LED_MATRIX_H_
