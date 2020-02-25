@@ -43,12 +43,15 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
+#include <string.h>
 #include "conf_usb.h"
 #include "usb_protocol.h"
 #include "udd.h"
 #include "udc.h"
 #include "udi_hid.h"
+
+COMPILER_WORD_ALIGNED
+static uint8_t udi_hid_desc_buf[sizeof(usb_hid_descriptor_t)];
 
 /**
  * \ingroup udi_hid_group
@@ -129,8 +132,9 @@ static bool udi_hid_reqstdifaceget_descriptor(uint8_t *report_desc) {
     // - or USB_DT_HID_REPORT descriptor
     // - or USB_DT_HID_PHYSICAL descriptor
     if (USB_DT_HID == (uint8_t)(udd_g_ctrlreq.req.wValue >> 8)) {
-        // USB_DT_HID descriptor requested then send it
-        udd_g_ctrlreq.payload      = (uint8_t *)ptr_hid_desc;
+        // USB_DT_HID descriptor requested, copy into word aligned buffer, then send it
+        memcpy(udi_hid_desc_buf, (uint8_t *)ptr_hid_desc, sizeof(usb_hid_descriptor_t));
+        udd_g_ctrlreq.payload      = udi_hid_desc_buf;
         udd_g_ctrlreq.payload_size = min(udd_g_ctrlreq.req.wLength, ptr_hid_desc->bLength);
         return true;
     }

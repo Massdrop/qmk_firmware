@@ -429,7 +429,7 @@ typedef struct {
 } udi_hid_raw_desc_t;
 
 typedef struct {
-    uint8_t array[27];
+    uint8_t array[28];
 } udi_hid_raw_report_desc_t;
 
 #    define UDI_HID_RAW_DESC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
