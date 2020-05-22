@@ -154,6 +154,7 @@ extern uint8_t breathe_dir;
 extern uint8_t led_animation_orientation;
 extern uint8_t led_animation_circular;
 extern float   led_edge_brightness;
+extern float   led_ratio_brightness;
 extern uint8_t led_edge_mode;
 
 extern RGB led_buffer[ISSI3733_LED_COUNT];

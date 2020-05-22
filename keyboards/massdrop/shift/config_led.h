@@ -46,14 +46,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ISSI3733_GCR_DEFAULT LED_GCR_MAX
 
 //Automatic power rollback and recovery
-#define V5_HIGH                     2494        //5V high level = 4.75V (After low power detect, point at which LEDs are allowed to use more power )
-#define V5_LOW                      2434        //5V low level = 4.634V (LED power rolled back to stay above this limit)
-#define V5_CAT                      2206        //5V catastrophic level = 4.20V (Host USB port potential to shut down)
+//#define V5_HIGH                     2494        //5V high level = 4.75V (After low power detect, point at which LEDs are allowed to use more power )
+//#define V5_LOW                      2434        //5V low level = 4.634V (LED power rolled back to stay above this limit)
+//#define V5_CAT                      2206        //5V catastrophic level = 4.20V (Host USB port potential to shut down)
 
-// Reduced 100mV to compensate for Vdrop -PS121719
-//#define V5_HIGH                     2442        //5V high level = 4.65V (After low power detect, point at which LEDs are allowed to use more power )
-//#define V5_LOW                      2381        //5V low level = 4.534V (LED power rolled back to stay above this limit)
-//#define V5_CAT                      2153        //5V catastrophic level = 4.10V (Host USB port potential to shut down)
+// Reduced 45mV to compensate for Vdrop & new R4=68.1K -PS051220
+#define V5_HIGH                     2468        //5V high level = 4.705V (After low power detect, point at which LEDs are allowed to use more power )
+#define V5_LOW                      2407        //5V low level = 4.589V (LED power rolled back to stay above this limit)
+#define V5_CAT                      2179        //5V catastrophic level = 4.155V (Host USB port potential to shut down)
 
 //LED Mapping Initializer for led_map[] struct
 //

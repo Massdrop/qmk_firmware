@@ -22,7 +22,9 @@ enum shift_keycodes {
     DBG_KBD,            //DEBUG Toggle Keyboard Prints
     DBG_MOU,            //DEBUG Toggle Mouse Prints
     DBG_FAC,            //DEBUG Factory light testing (All on white)
-    MD_BOOT             //Restart into bootloader after hold timeout
+    MD_BOOT,             //Restart into bootloader after hold timeout
+	L_RATIOI,			// Increase Key to Underglow LED brightness Ratio
+	L_RATIOD			// Decrease Key to Underglow LED brightness Ratio
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
@@ -44,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS,           KC_MPLY, KC_MSTP, KC_VOLU, KC_MUTE, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_MPRV, KC_MNXT, KC_VOLD, KC_SLCK, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   L_EDG_I, _______, _______, _______, U_T_AGCR,_______, _______, _______, _______, _______,          _______, _______, _______, _______, \
-        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, \
+        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, L_RATIOD,L_RATIOI,_______, _______, _______, _______,                   _______, _______, _______, _______, \
         _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, TG_NKRO, _______, _______, _______, _______, _______,                            _______, _______, _______,          \
                                                                                                                              _______,                                     _______, \
         _______, _______, _______,                   DBG_FAC,                            KC_APP,  _______,                                     _______, _______,                   \
@@ -113,6 +115,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 led_edge_brightness -= 0.1;
                 if (led_edge_brightness < 0) { led_edge_brightness = 0; }
+            }
+            return false;
+        case L_RATIOI:
+            if (record->event.pressed) {
+                led_ratio_brightness += 0.2;
+                if (led_ratio_brightness > 2.0) { led_ratio_brightness = 2.0; }
+            }
+            return false;
+        case L_RATIOD:
+            if (record->event.pressed) {
+            	led_ratio_brightness -= 0.2;
+                if (led_ratio_brightness < 0.0) { led_ratio_brightness = 0.0; }
             }
             return false;
         case L_PTN:

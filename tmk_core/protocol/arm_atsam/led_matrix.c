@@ -402,6 +402,7 @@ uint8_t led_animation_breathe_cur = BREATHE_MIN_STEP;
 uint8_t breathe_dir               = 1;
 uint8_t led_animation_circular    = 0;
 float   led_edge_brightness       = 1.0f;
+float   led_ratio_brightness      = 1.0f;
 uint8_t led_edge_mode             = LED_EDGE_MODE_ALL;
 
 static void led_run_pattern(led_setup_t* f, float* ro, float* go, float* bo, float pos) {
@@ -578,6 +579,20 @@ static void led_matrix_massdrop_config_override(int i) {
         ro *= led_edge_brightness;
         go *= led_edge_brightness;
         bo *= led_edge_brightness;
+    }
+
+    // Adjust ratio of key vs. underglow (edge) LED brightness
+
+    if (LED_IS_EDGE(led_map[i].scan) && led_ratio_brightness > 1.0) {
+        // Decrease edge (underglow) LEDs
+        ro *= (2.0 - led_ratio_brightness);
+        go *= (2.0 - led_ratio_brightness);
+        bo *= (2.0 - led_ratio_brightness);
+    } else if (!LED_IS_EDGE(led_map[i].scan) && led_ratio_brightness < 1.0) {
+        // Decrease KEY LEDs
+        ro *= led_ratio_brightness;
+        go *= led_ratio_brightness;
+        bo *= led_ratio_brightness;
     }
 
     led_buffer[i].r = (uint8_t)ro;
