@@ -162,7 +162,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case L_T_ONF:
             if (record->event.pressed) {
-                I2C3733_Control_Set(!I2C3733_Control_Get());
+                //I2C3733_Control_Set(!I2C3733_Control_Get());
+            	led_lighting_mode = ((led_lighting_mode == LED_MODE_INDICATORS_ONLY)? LED_MODE_NORMAL : LED_MODE_INDICATORS_ONLY);
             }
             return false;
         case L_ON:

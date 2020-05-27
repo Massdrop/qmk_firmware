@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef USE_MASSDROP_CONFIGURATOR
 __attribute__((weak)) led_instruction_t led_instructions[] = {{.end = 1}};
 static void                             led_matrix_massdrop_config_override(int i);
+static void                             md_led_matrix_indicators(void);
 #endif  // USE_MASSDROP_CONFIGURATOR
 
 void SERCOM1_0_Handler(void) {
@@ -249,6 +250,8 @@ void flush(void) {
     uint8_t drvid;
 
 #ifdef USE_MASSDROP_CONFIGURATOR
+    md_led_matrix_indicators();
+
     // If there will be a sudden spike in required power, lower GCR prior to change according to some ratio
     if (power_sum > (uint32_t)((float)power_sum_last * 1.5)) {
         // Lower GCR according to a percentage of the change in power ratio
@@ -324,51 +327,56 @@ void flush(void) {
 }
 
 void led_matrix_indicators(void) {
+    // Null - this is called too many times during the rendering process
+}
+
+#ifdef USE_MASSDROP_CONFIGURATOR
+static void md_led_matrix_indicators(void) {
     uint8_t kbled = keyboard_leds();
     if (/*kbled &&*/ rgb_matrix_config.enable) {
         for (uint8_t i = 0; i < ISSI3733_LED_COUNT; i++) {
-#ifdef USB_LED_INDICATOR_ENABLE
+#    ifdef USB_LED_INDICATOR_ENABLE
             if ((led_mfg_test_mode == LED_MFG_TEST_MODE_OFF) && (
-#    ifdef USB_LED_NUM_LOCK_SCANCODE
+#        ifdef USB_LED_NUM_LOCK_SCANCODE
                                                                     (led_map[i].scan == USB_LED_NUM_LOCK_SCANCODE && (kbled & (1 << USB_LED_NUM_LOCK))) ||
-#    endif  // NUM LOCK
-#    ifdef USB_LED_CAPS_LOCK_SCANCODE
+#        endif  // NUM LOCK
+#        ifdef USB_LED_CAPS_LOCK_SCANCODE
                                                                     (led_map[i].scan == USB_LED_CAPS_LOCK_SCANCODE && (kbled & (1 << USB_LED_CAPS_LOCK))) ||
-#    endif  // CAPS LOCK
-#    ifdef USB_LED_SCROLL_LOCK_SCANCODE
+#        endif  // CAPS LOCK
+#        ifdef USB_LED_SCROLL_LOCK_SCANCODE
                                                                     (led_map[i].scan == USB_LED_SCROLL_LOCK_SCANCODE && (kbled & (1 << USB_LED_SCROLL_LOCK))) ||
-#    endif  // SCROLL LOCK
-#    ifdef USB_LED_COMPOSE_SCANCODE
+#        endif  // SCROLL LOCK
+#        ifdef USB_LED_COMPOSE_SCANCODE
                                                                     (led_map[i].scan == USB_LED_COMPOSE_SCANCODE && (kbled & (1 << USB_LED_COMPOSE))) ||
-#    endif  // COMPOSE
-#    ifdef USB_LED_KANA_SCANCODE
+#        endif  // COMPOSE
+#        ifdef USB_LED_KANA_SCANCODE
                                                                     (led_map[i].scan == USB_LED_KANA_SCANCODE && (kbled & (1 << USB_LED_KANA))) ||
-#    endif  // KANA
+#        endif  // KANA
                                                                     // Dedicated LEDs (Could be done more efficiently - meh)
                                                                     (0))) {
                 led_buffer[i].r = 255 - led_buffer[i].r;
                 led_buffer[i].g = 255 - led_buffer[i].g;
                 led_buffer[i].b = 255 - led_buffer[i].b;
             }
-#endif
-#ifdef DEDICATED_LED_INDICATOR_ENABLE
+#    endif
+#    ifdef DEDICATED_LED_INDICATOR_ENABLE
             if ((led_mfg_test_mode == LED_MFG_TEST_MODE_OFF) && (
 // Turn off unactive dedicated LED indicators
-#    ifdef USB_LED_NUM_LOCK_LEDID
+#        ifdef USB_LED_NUM_LOCK_LEDID
                                                                     (led_map[i].id == USB_LED_NUM_LOCK_LEDID && ((kbled & (1 << USB_LED_NUM_LOCK)) == 0)) ||
-#    endif
-#    ifdef USB_LED_CAPS_LOCK_LEDID
+#        endif
+#        ifdef USB_LED_CAPS_LOCK_LEDID
                                                                     (led_map[i].id == USB_LED_CAPS_LOCK_LEDID && ((kbled & (1 << USB_LED_CAPS_LOCK)) == 0)) ||
-#    endif
-#    ifdef USB_LED_SCROLL_LOCK_LEDID
+#        endif
+#        ifdef USB_LED_SCROLL_LOCK_LEDID
                                                                     (led_map[i].id == USB_LED_SCROLL_LOCK_LEDID && ((kbled & (1 << USB_LED_SCROLL_LOCK)) == 0)) ||
-#    endif
-#    ifdef USB_LED_COMPOSE_LEDID
+#        endif
+#        ifdef USB_LED_COMPOSE_LEDID
                                                                     (led_map[i].id == USB_LED_COMPOSE_LEDID && !(kbled & (1 << USB_LED_COMPOSE))) ||
-#    endif
-#    ifdef USB_LED_KANA_LEDID
+#        endif
+#        ifdef USB_LED_KANA_LEDID
                                                                     (led_map[i].id == USB_LED_KANA_LEDID && !(kbled & (1 << USB_LED_KANA))) ||
-#    endif
+#        endif
                                                                     (0))) {
                 led_buffer[i].r = 0;
                 led_buffer[i].g = 0;
@@ -377,10 +385,11 @@ void led_matrix_indicators(void) {
                 // led_buffer[i].g = 255 - led_buffer[i].g;
                 // led_buffer[i].b = 255 - led_buffer[i].b;
             }
-#endif
+#    endif
         }
     }
 }
+#endif
 
 const rgb_matrix_driver_t rgb_matrix_driver = {.init = init, .flush = flush, .set_color = led_set_one, .set_color_all = led_set_all};
 
@@ -509,17 +518,11 @@ static void led_matrix_massdrop_config_override(int i) {
 
     if (led_lighting_mode == LED_MODE_KEYS_ONLY && LED_IS_EDGE(led_map[i].scan)) {
         // Do not act on this LED
-    } else if (led_lighting_mode == LED_MODE_NON_KEYS_ONLY && !LED_IS_EDGE(led_map[i].scan)) {
-        // TODO: sort this out
-        /*
-            if (led_lighting_mode == LED_MODE_KEYS_ONLY && HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
-                //Do not act on this LED
-            } else if (led_lighting_mode == LED_MODE_NON_KEYS_ONLY && !HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
-        */
+    } else if (led_lighting_mode == LED_MODE_NON_KEYS_ONLY && LED_IS_KEY(led_map[i].scan)) {
         // Do not act on this LED
     } else if (led_edge_mode == LED_EDGE_MODE_ALTERNATE && LED_IS_EDGE_ALT(led_map[i].scan)) {
         // Do not act on this LED (Edge alternate lighting mode)
-    } else if (led_lighting_mode == LED_MODE_INDICATORS_ONLY) {
+    } else if (led_lighting_mode == LED_MODE_INDICATORS_ONLY && !LED_IS_INDICATOR(led_map[i].scan)) {
         // Do not act on this LED (Only show indicators)
     } else {
         led_instruction_t* led_cur_instruction = led_instructions;
@@ -582,13 +585,12 @@ static void led_matrix_massdrop_config_override(int i) {
     }
 
     // Adjust ratio of key vs. underglow (edge) LED brightness
-
     if (LED_IS_EDGE(led_map[i].scan) && led_ratio_brightness > 1.0) {
         // Decrease edge (underglow) LEDs
         ro *= (2.0 - led_ratio_brightness);
         go *= (2.0 - led_ratio_brightness);
         bo *= (2.0 - led_ratio_brightness);
-    } else if (!LED_IS_EDGE(led_map[i].scan) && led_ratio_brightness < 1.0) {
+    } else if (LED_IS_KEY(led_map[i].scan) && led_ratio_brightness < 1.0) {
         // Decrease KEY LEDs
         ro *= led_ratio_brightness;
         go *= led_ratio_brightness;

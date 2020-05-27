@@ -180,6 +180,7 @@ extern issi3733_led_t led_map[ISSI3733_LED_COUNT];
 #define LED_EDGE_MIN_SCAN 254   // LEDs configured with scan code >= to this are assigned as edge LEDs
 #define LED_INDICATOR_SCAN 253  // LEDs configured as dedicated indicators
 
+#define LED_IS_KEY(scan) (scan < LED_INDICATOR_SCAN)         // Return true if an LED's scan value indicates it is a key LED
 #define LED_IS_EDGE(scan) (scan >= LED_EDGE_MIN_SCAN)        // Return true if an LED's scan value indicates an edge LED
 #define LED_IS_EDGE_ALT(scan) (scan == LED_EDGE_ALT_MODE)    // Return true if an LED's scan value indicates an alternate edge mode LED
 #define LED_IS_INDICATOR(scan) (scan == LED_INDICATOR_SCAN)  // Return true if an LED's scan value indicates it is a dedicated Indicator

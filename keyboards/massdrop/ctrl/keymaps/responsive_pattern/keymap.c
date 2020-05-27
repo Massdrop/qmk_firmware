@@ -385,19 +385,19 @@ void led_matrix_run(void)
         {
             uint8_t kbled = keyboard_leds();
             if (
-                #if USB_LED_NUM_LOCK_SCANCODE != 255
+                #ifdef USB_LED_NUM_LOCK_SCANCODE
                 (led_cur->scan == USB_LED_NUM_LOCK_SCANCODE && kbled & (1<<USB_LED_NUM_LOCK)) ||
                 #endif //NUM LOCK
-                #if USB_LED_CAPS_LOCK_SCANCODE != 255
+                #ifdef USB_LED_CAPS_LOCK_SCANCODE
                 (led_cur->scan == USB_LED_CAPS_LOCK_SCANCODE && kbled & (1<<USB_LED_CAPS_LOCK)) ||
                 #endif //CAPS LOCK
-                #if USB_LED_SCROLL_LOCK_SCANCODE != 255
+                #ifdef USB_LED_SCROLL_LOCK_SCANCODE
                 (led_cur->scan == USB_LED_SCROLL_LOCK_SCANCODE && kbled & (1<<USB_LED_SCROLL_LOCK)) ||
                 #endif //SCROLL LOCK
-                #if USB_LED_COMPOSE_SCANCODE != 255
+                #ifdef USB_LED_COMPOSE_SCANCODE
                 (led_cur->scan == USB_LED_COMPOSE_SCANCODE && kbled & (1<<USB_LED_COMPOSE)) ||
                 #endif //COMPOSE
-                #if USB_LED_KANA_SCANCODE != 255
+                #ifdef USB_LED_KANA_SCANCODE
                 (led_cur->scan == USB_LED_KANA_SCANCODE && kbled & (1<<USB_LED_KANA)) ||
                 #endif //KANA
                 (0))
