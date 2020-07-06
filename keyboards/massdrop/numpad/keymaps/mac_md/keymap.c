@@ -10,6 +10,8 @@ enum shift_keycodes {
     L_PTP,              //LED Pattern Select Previous
     L_PSI,              //LED Pattern Speed Increase
     L_PSD,              //LED Pattern Speed Decrease
+    L_RATIOD,
+    L_RATIOI,
     L_T_MD,             //LED Toggle Mode
     L_T_ONF,            //LED Toggle On / Off
     L_ON,               //LED On
@@ -107,6 +109,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 led_edge_brightness -= 0.1;
                 if (led_edge_brightness < 0) { led_edge_brightness = 0; }
+            }
+            return false;
+        case L_RATIOI:
+            if (record->event.pressed) {
+                led_ratio_brightness += 0.2;
+                if (led_ratio_brightness > 2.0) { led_ratio_brightness = 2.0; }
+            }
+            return false;
+        case L_RATIOD:
+            if (record->event.pressed) {
+                led_ratio_brightness -= 0.2;
+                if (led_ratio_brightness < 0.0) { led_ratio_brightness = 0.0; }
             }
             return false;
         case L_PTN:
@@ -250,7 +264,7 @@ led_instruction_t led_instructions[] = {
     //Flags can be found in tmk_core/protocol/arm_atsam/led_matrix.h (prefixed with LED_FLAG_)
     //LED IDs can be found in config_led.h in the keyboard's directory
     //Examples are below
-    
+
     //All LEDs use the user's selected pattern (this is the factory default)
      { .flags = LED_FLAG_USE_ROTATE_PATTERN },
 
@@ -259,7 +273,7 @@ led_instruction_t led_instructions[] = {
 
     //Specific LEDs use specified RGB values while all others are off
     // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 0xFF, .id1 = 0x00FF, .id2 = 0x0000FF00, .id3 = 0xFF000000, .r = 75, .g = 150, .b = 225 },
-    
+
     //All LEDs use the user's selected pattern
     //On layer 1, all key LEDs (except the top row which keeps active pattern) are red while all edge LEDs are green
     //When layer 1 is active, key LEDs use red    (id0  32 -  17: 1111 1111 1111 1111 0000 0000 0000 0000 = 0xFFFF0000) (except top row 16 - 1)

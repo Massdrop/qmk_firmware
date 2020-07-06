@@ -352,7 +352,7 @@ static void md_led_matrix_indicators(void) {
 #        ifdef USB_LED_KANA_SCANCODE
                                                                     (led_map[i].scan == USB_LED_KANA_SCANCODE && (kbled & (1 << USB_LED_KANA))) ||
 #        endif  // KANA
-                                                                    // Dedicated LEDs (Could be done more efficiently - meh)
+                // Dedicated LEDs (Could be done more efficiently - meh)
                                                                     (0))) {
                 led_buffer[i].r = 255 - led_buffer[i].r;
                 led_buffer[i].g = 255 - led_buffer[i].g;
@@ -534,8 +534,9 @@ static void led_matrix_massdrop_config_override(int i) {
 
             // Check if this applies to current index
             if (led_cur_instruction->flags & LED_FLAG_MATCH_ID) {
-                uint8_t   modid    = i / 32;                             // Calculate which id# contains the led bit
-                uint32_t  modidbit = 1 << (i % 32);                      // Calculate the bit within the id#
+                uint8_t   ledid    = led_map[i].id - 1;
+                uint8_t   modid    = ledid / 32;                         // Calculate which id# contains the led bit
+                uint32_t  modidbit = 1 << (ledid % 32);                  // Calculate the bit within the id#
                 uint32_t* bitfield = &led_cur_instruction->id0 + modid;  // Add modid as offset to id0 address. *bitfield is now idX of the led id
                 if (~(*bitfield) & modidbit) {                           // Check if led bit is not set in idX
                     goto next_iter;
