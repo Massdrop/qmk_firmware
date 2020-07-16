@@ -38,23 +38,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    ),
+    /* Coding Layout */
+    [1] = LAYOUT(
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
+        KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC,          KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* General Modifiers */
-    [1] = LAYOUT(
+    [9] = LAYOUT(
         KC_ESC,     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,              _______, _______, \
         _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PSCR, _______, _______,             _______, KC_HOME,  \
         _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                      _______, KC_PGUP, \
         _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                      _______, KC_PGDN, \
-        _______,    _______, _______,                            _______,                            TG(2),   _______, KC_MEDIA_PREV_TRACK, _______, KC_MEDIA_NEXT_TRACK   \
+        _______,    _______, _______,                            _______,                            TG(10),   _______, KC_MEDIA_PREV_TRACK, _______, KC_MEDIA_NEXT_TRACK   \
     ),
     /* Keyboad Settings Mode */
-    [2] = LAYOUT(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
+    [10] = LAYOUT(
+        XXXXXXX, DF(0), DF(1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_EDG_M, L_T_MD, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, L_EDG_I, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MD_BOOT, TG_NKRO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          L_BRI,   L_EDG_D, \
-        XXXXXXX, XXXXXXX, XXXXXXX,                            DBG_FAC,                            TO(0),   XXXXXXX,   L_PTP,   L_BRD,   L_PTN  \
+        XXXXXXX, XXXXXXX, XXXXXXX,                            DBG_FAC,                            TG(10),   XXXXXXX,   L_PTP,   L_BRD,   L_PTN  \
     ),
     /* Default Layers
     [0] = LAYOUT(
@@ -291,29 +299,35 @@ led_instruction_t led_instructions[] = {
 
     /* General Modifiers Layer */
     // Esc is RED
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1, .r = 255 },
+    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1, .r = 255 },
     // Function Keys and Left/Right are ORANGE
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 8190, .id2 = 5, .r = 255, .g = 165 },
+    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 8190, .id2 = 5, .r = 255, .g = 165 },
     // Home, PgUp, PgDn use DEFAULT colour
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 536870912, .id1 = 33556480 },
+    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 536870912, .id1 = 33556480 },
     // Right alt is GREEN
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1073741824, .g = 255 },
+    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1073741824, .g = 255 },
     /* end */
 
     /* Keyboard Settings Mode */
     // All LEDs are off except the edge
-    { .layer = 2, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
-    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id2 = 4294967288, .id3 = 511 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id2 = 4294967288, .id3 = 511 },
     // Backspace, Del, Home, "\", N, Space are WHITE
-    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255 },
     // Up, Down, Right alt are ORANGE
-    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 165 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 165 },
     // Left, Right are GREEN
-    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 5, .g = 255 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 5, .g = 255 },
     // PgUp, PgDn are BLUE
-    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 33556480, .b = 255 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 33556480, .b = 255 },
     // B is RED
-    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 131072, .r = 255 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 131072, .r = 255 },
+    /* -- Default Layer Status Indicators -- */
+    // -- 1
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 2, .r = 255, .g = 255, .b = 255 },
+    // -- 2
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .r = 255, .g = 255, .b = 255 },
+    /* -- end -- */
     /* end */
 
     //end must be set to 1 to indicate end of instruction set
