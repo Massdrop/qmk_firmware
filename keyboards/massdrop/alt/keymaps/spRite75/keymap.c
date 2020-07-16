@@ -48,12 +48,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC,          KC_UP,   KC_AUDIO_VOL_DOWN, \
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
+    /* Overwatch Layout - functionally same as General Layout */
+    [3] = LAYOUT(
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    ),
     /* General Modifiers */
     [9] = LAYOUT(
-        KC_ESC,     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,              _______, _______, \
-        _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PSCR, _______, _______,             _______, KC_HOME,  \
-        _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                      _______, KC_PGUP, \
-        _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                      _______, KC_PGDN, \
+        KC_ESC,     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,               _______, _______, \
+        _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PSCR, _______, _______,              _______, KC_HOME,  \
+        _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                       _______, KC_PGUP, \
+        _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                       _______, KC_PGDN, \
         _______,    _______, _______,                            _______,                            TG(10),   _______, KC_MEDIA_PREV_TRACK, _______, KC_MEDIA_NEXT_TRACK   \
     ),
     /* Keyboad Settings Mode */
@@ -297,6 +305,20 @@ led_instruction_t led_instructions[] = {
     { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
     /* end */
 
+    /* Overwatch */
+    // All LEDs are off except the edge and Fn
+    { .layer = 3, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511 },
+    // Movement - W, A, S, D, Left Ctrl, Space are CYAN
+    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 2147614720, .id1 = 603979779, .b = 255, .g = 255 },
+    // Ultimate - Q is YELLOW
+    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 65536, .r = 255, .g = 255 },
+    // Abilities - Left Shift, E, F are ORANGE
+    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 786432, .id1 = 4100, .r = 255, .g = 165 },
+    // Communication - CapsLock, Z, X, C are MAGENTA
+    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1073741824, .id1 = 57344, .r = 255, .b = 255 },
+    /* end */
+
     /* General Modifiers Layer */
     // Esc is RED
     { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1, .r = 255 },
@@ -310,7 +332,7 @@ led_instruction_t led_instructions[] = {
 
     /* Keyboard Settings Mode */
     // All LEDs are off except the edge
-    { .layer = 10, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
+    { .layer = 10, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id2 = 4294967288, .id3 = 511 },
     // Backspace, Del, Home, "\", N, Space are WHITE
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255 },
@@ -329,6 +351,9 @@ led_instruction_t led_instructions[] = {
     // -- 2
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .r = 255, .g = 255, .b = 255 },
     { .layer = 10, .dLayer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .g = 255 },
+    // -- 3
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .r = 255, .g = 255, .b = 255 },
+    { .layer = 10, .dLayer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .g = 255 },
     /* -- end -- */
     /* end */
 
