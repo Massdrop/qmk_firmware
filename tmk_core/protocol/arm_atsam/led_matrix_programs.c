@@ -104,18 +104,31 @@ led_setup_t leds_rainbow_s[] = {
 //The last entry must be { .end = 1 }
 //Add the new animation name to the list below following its format
 
+// typedef struct led_setup_s {
+//   float hs;         //Band begin at percent
+//   float he;         //Band end at percent
+//   uint8_t rs;       //Red start value
+//   uint8_t re;       //Red end value
+//   uint8_t gs;       //Green start value
+//   uint8_t ge;       //Green end value
+//   uint8_t bs;       //Blue start value
+//   uint8_t be;       //Blue end value
+//   uint32_t ef;      //Animation and color effects
+//   uint8_t end;      //Set to signal end of the setup
+// } led_setup_t;
+
+// spRite75 Teal <-> Salmon
+led_setup_t spRite75_leds_teal_salmon[] = {
+    { .hs = 0,  .he = 33,  .rs = 24,  .re = 24,  .gs = 215, .ge = 215, .bs = 204, .be = 204, .ef = EF_OVER },
+    { .hs = 33, .he = 66,  .rs = 24,  .re = 255, .gs = 215, .ge = 114, .bs = 204, .be = 118, .ef = EF_OVER },
+    { .hs = 66, .he = 100, .rs = 255, .re = 255, .gs = 114, .ge = 114, .bs = 118, .be = 118, .ef = EF_OVER },
+    { .end = 1 },
+};
+
 void *led_setups[] = {
-    // leds_rainbow_s,
-    // leds_rainbow_ns,
-    leds_teal_salmon,
-    // leds_yellow,
-    // leds_red,
-    // leds_green,
-    // leds_blue,
-    // leds_white,
-    // leds_white_with_red_stripe,
-    // leds_black_with_red_stripe,
-    // leds_off
+    spRite75_leds_teal_salmon,
+    leds_rainbow_ns,
+    leds_rainbow_s
 };
 
 const uint8_t led_setups_count = sizeof(led_setups) / sizeof(led_setups[0]);

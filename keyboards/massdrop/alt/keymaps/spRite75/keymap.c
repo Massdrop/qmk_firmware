@@ -26,7 +26,11 @@ enum alt_keycodes {
     DBG_FAC,            //DEBUG Factory light testing (All on white)
     MD_BOOT,            //Restart into bootloader after hold timeout
     // Custom Functionality
-    OW_ENTR             //Overwatch - tap enter and toggle chat layer
+    // -- Chat layer - for partially lit layers
+    CHAT_ENTR,          // tap enter and toggle chat layer
+    CHAT_ESC,           // tap escape and toggle chat layer
+    CSGO_U,             // tap U and toggle chat layer
+    CSGO_Y,             // tap Y and toggle chat layer
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
@@ -52,19 +56,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     /* Overwatch Layout - functionally same as General Layout */
     [2] = LAYOUT(
+        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,    KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,    KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          CHAT_ENTR,  KC_AUDIO_VOL_UP, \
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,      KC_AUDIO_VOL_DOWN, \
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN,    KC_RGHT  \
+    ),
+    /* CSGO Layout - functionally same as General Layout */
+    [3] = LAYOUT(
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          OW_ENTR, KC_AUDIO_VOL_UP, \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    CSGO_Y,  CSGO_U,  KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
-    /* Overwatch Chat Mode */
-    [3] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-        _______, _______, _______,                            _______,                            _______, XXXXXXX, _______, _______, _______  \
+    /* Chat Mode */
+    [8] = LAYOUT(
+        CHAT_ESC, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, \
+        _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, \
+        _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          CHAT_ENTR, _______, \
+        _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,   _______, \
+        _______,  _______, _______,                            _______,                            _______, XXXXXXX, _______, _______,   _______  \
     ),
     /* General Modifiers */
     [9] = LAYOUT(
@@ -76,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     /* Keyboad Settings Mode */
     [10] = LAYOUT(
-        XXXXXXX, DF(0), DF(1), DF(2), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
+        XXXXXXX, DF(0), DF(1), DF(2), DF(3), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_EDG_M, L_T_MD, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, L_EDG_I, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MD_BOOT, TG_NKRO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          L_BRI,   L_EDG_D, \
@@ -302,10 +314,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-        case OW_ENTR:
+        case CHAT_ENTR:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_ENTER));
-                layer_invert(3);
+                layer_invert(8);
+            }
+            return false;
+        case CHAT_ESC:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_ESCAPE));
+                layer_off(8);
+            }
+            return false;
+        case CSGO_Y:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_Y));
+                layer_on(8);
+            }
+            return false;
+        case CSGO_U:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_U));
+                layer_on(8);
             }
             return false;
         default:
@@ -341,7 +371,7 @@ led_instruction_t led_instructions[] = {
     // All LEDs are off except the edge and Fn
     { .dLayer = 2, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     { .dLayer = 2, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
-    // Movement - W, A, S, D, Left Ctrl, Space are PALEBLUE
+    // Movement - W, A, S, D, Left Ctrl, Space are BLUE
     { .dLayer = 2, .id0 = 2147614720, .id1 = 603979779, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Ultimate - Q is YELLOW
     { .dLayer = 2, .id0 = 65536, .r = 255, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
@@ -349,9 +379,29 @@ led_instruction_t led_instructions[] = {
     { .dLayer = 2, .id0 = 786432, .id1 = 4100, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Communication - CapsLock, Z, X, C, Enter are MAGENTA
     { .dLayer = 2, .id0 = 1073741824, .id1 = 58368, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
-    // Chat Mode - Light up all keys with Enter being LIGHTGREEN
-    { .layer = 3, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
-    { .layer = 3, .id1 = 1024, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    /* end */
+
+    /* CSGO - default layer 3 */
+    // All LEDs are off except the edge and Fn
+    { .dLayer = 3, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .dLayer = 3, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
+    // Movement - W, A, S, D, Left Ctrl, Left Shift, Space are BLUE
+    { .dLayer = 3, .id0 = 2147614720, .id1 = 603983875, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Abilities - Q, E, R, F, G are ORANGE
+    { .dLayer = 3, .id0 = 851968, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Grenades - C and V are GREEN
+    { .dLayer = 3, .id1 = 98304, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Communication - CapsLock, Y, U are MAGENTA
+    { .dLayer = 3, .id0 = 1080033280, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    /* end */
+
+    /* Chat Mode */
+    // Light up all keys
+    { .layer = 8, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
+    // Enter is GREEN
+    { .layer = 8, .id1 = 1024, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Esc is RED
+    { .layer = 8, .id0 = 1, .r = 255, .g = 0, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     /* end */
 
     /* General Modifiers Layer */
@@ -375,7 +425,7 @@ led_instruction_t led_instructions[] = {
     { .layer = 10, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Left, Right are LIGHTGREEN
     { .layer = 10, .id2 = 5, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    // PgUp, PgDn are PALEBLUE
+    // PgUp, PgDn are BLUE
     { .layer = 10, .id1 = 33556480, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // B is RED
     { .layer = 10, .id1 = 131072, .r = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
@@ -389,6 +439,9 @@ led_instruction_t led_instructions[] = {
     // -- 3
     { .layer = 10, .id0 = 8, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     { .layer = 10, .id0 = 8, .r = 0, .g = 255, .b = 0, .dLayer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    // -- 4
+    { .layer = 10, .id0 = 16, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = 10, .id0 = 16, .r = 0, .g = 255, .b = 0, .dLayer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     /* -- end -- */
     /* end */
 
