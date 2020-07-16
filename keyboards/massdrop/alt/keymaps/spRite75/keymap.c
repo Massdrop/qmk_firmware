@@ -24,7 +24,9 @@ enum alt_keycodes {
     DBG_KBD,            //DEBUG Toggle Keyboard Prints
     DBG_MOU,            //DEBUG Toggle Mouse Prints
     DBG_FAC,            //DEBUG Factory light testing (All on white)
-    MD_BOOT             //Restart into bootloader after hold timeout
+    MD_BOOT,            //Restart into bootloader after hold timeout
+    // Custom Functionality
+    OW_ENTR             //Overwatch - tap enter and toggle chat layer
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
@@ -49,12 +51,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* Overwatch Layout - functionally same as General Layout */
-    [3] = LAYOUT(
+    [2] = LAYOUT(
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          OW_ENTR, KC_AUDIO_VOL_UP, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    ),
+    /* Overwatch Chat Mode */
+    [3] = LAYOUT(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        _______, _______, _______,                            _______,                            _______, XXXXXXX, _______, _______, _______  \
     ),
     /* General Modifiers */
     [9] = LAYOUT(
@@ -66,7 +76,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     /* Keyboad Settings Mode */
     [10] = LAYOUT(
-        XXXXXXX, DF(0), DF(1), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
+        XXXXXXX, DF(0), DF(1), DF(2), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_EDG_M, L_T_MD, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, L_EDG_I, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MD_BOOT, TG_NKRO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          L_BRI,   L_EDG_D, \
@@ -292,68 +302,102 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+        case OW_ENTR:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_ENTER));
+                layer_invert(3);
+            }
+            return false;
         default:
             return true; //Process all other keycodes normally
     }
 }
 
 led_instruction_t led_instructions[] = {
+    /* Colour definitions
+        from: https://www.schemecolor.com/land-of-pastels.php
+        PURPLE (, .r = 153, .g = 138, .b = 211)
+        PINK (, .r = 228, .g = 148, .b = 211)
+        LIGHTGREEN (, .r = 205, .g = 241, .b = 175)
+        AQUA (, .r = 135, .g = 220, .b = 192)
+        PALEBLUE (, .r = 136, .g = 187, .b = 228)
+
+        from: https://www.schemecolor.com/brilliant-pastel.php
+        RED (, .r = 195, .g = 60, .b = 35)
+        YELLOW (, .r = 255, .g = 253, .b = 150)
+        ORANGE (, .r = 255, .g = 170, .b = 71)
+
+        from: https://www.schemecolor.com/pastel-brown-and-red.php
+        BROWN (, .r = 131, .g = 104, .b = 83)
+
+        custom
+        DULLWHITE (, .r = 200, .g = 200, .b = 200)
+    */
+
     /* Default */
     // Use selected pattern across keyboard
     { .flags = LED_FLAG_USE_ROTATE_PATTERN },
     // Home, PgUp, PgDn are OFF
-    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
+    { .id0 = 536870912, .id1 = 33556480, .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
-    /* Overwatch */
+    /* Coding - default layer 1 */
+    // Highlight Shift keys with DULLWHITE
+    { .dLayer = 1, .id1 = 8392704, .r = 200, .g = 200, .b = 200, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    /* end */
+
+    /* Overwatch - default layer 2 */
     // All LEDs are off except the edge and Fn
-    { .layer = 3, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511 },
-    // Movement - W, A, S, D, Left Ctrl, Space are CYAN
-    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 2147614720, .id1 = 603979779, .b = 255, .g = 255 },
+    { .dLayer = 2, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .dLayer = 2, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
+    // Movement - W, A, S, D, Left Ctrl, Space are PALEBLUE
+    { .dLayer = 2, .id0 = 2147614720, .id1 = 603979779, .r = 136, .g = 187, .b = 228, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Ultimate - Q is YELLOW
-    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 65536, .r = 255, .g = 255 },
+    { .dLayer = 2, .id0 = 65536, .r = 255, .g = 253, .b = 150, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Abilities - Left Shift, E, F are ORANGE
-    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 786432, .id1 = 4100, .r = 255, .g = 165 },
-    // Communication - CapsLock, Z, X, C are MAGENTA
-    { .layer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1073741824, .id1 = 57344, .r = 255, .b = 255 },
+    { .dLayer = 2, .id0 = 786432, .id1 = 4100, .r = 255, .g = 170, .b = 71, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Communication - CapsLock, Z, X, C, Enter are PINK
+    { .dLayer = 2, .id0 = 1073741824, .id1 = 58368, .r = 228, .g = 148, .b = 211, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Chat Mode - Light up all keys with Enter being LIGHTGREEN
+    { .layer = 3, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
+    { .layer = 3, .id1 = 1024, .r = 205, .g = 241, .b = 175, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
     /* General Modifiers Layer */
     // Esc is RED
-    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1, .r = 255 },
+    { .layer = 9, .id0 = 1, .r = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Function Keys and Left/Right are ORANGE
-    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 8190, .id2 = 5, .r = 255, .g = 165 },
+    { .layer = 9, .id0 = 8190, .id2 = 5, .r = 255, .g = 170, .b = 71, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Home, PgUp, PgDn use DEFAULT colour
-    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 536870912, .id1 = 33556480 },
-    // Right alt is GREEN
-    { .layer = 9, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1073741824, .g = 255 },
+    { .layer = 9, .id0 = 536870912, .id1 = 33556480, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
+    // Right alt is LIGHTGREEN
+    { .layer = 9, .id1 = 1073741824, .r = 205, .g = 241, .b = 175, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     /* end */
 
     /* Keyboard Settings Mode */
     // All LEDs are off except the edge
     { .layer = 10, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id2 = 4294967288, .id3 = 511 },
+    { .layer = 10, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
     // Backspace, Del, Home, "\", N, Space are WHITE
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255 },
+    { .layer = 10, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Up, Down, Right alt are ORANGE
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 165 },
-    // Left, Right are GREEN
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 5, .g = 255 },
-    // PgUp, PgDn are CYAN
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 33556480, .b = 255, .g = 255 },
+    { .layer = 10, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 170, .b = 71, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    // Left, Right are LIGHTGREEN
+    { .layer = 10, .id2 = 5, .r = 205, .g = 241, .b = 175, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    // PgUp, PgDn are PALEBLUE
+    { .layer = 10, .id1 = 33556480, .r = 136, .g = 187, .b = 228, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // B is RED
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 131072, .r = 255 },
+    { .layer = 10, .id1 = 131072, .r = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     /* -- Default Layer Status Indicators -- */
     // -- 1
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 2, .r = 255, .g = 255, .b = 255 },
-    { .layer = 10, .dLayer = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 2, .g = 255 },
+    { .layer = 10, .id0 = 2, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = 10, .id0 = 2, .r = 205, .g = 241, .b = 175, .dLayer = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     // -- 2
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .r = 255, .g = 255, .b = 255 },
-    { .layer = 10, .dLayer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .g = 255 },
+    { .layer = 10, .id0 = 4, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = 10, .id0 = 4, .r = 205, .g = 241, .b = 175, .dLayer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     // -- 3
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .r = 255, .g = 255, .b = 255 },
-    { .layer = 10, .dLayer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .g = 255 },
+    { .layer = 10, .id0 = 8, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = 10, .id0 = 8, .r = 205, .g = 241, .b = 175, .dLayer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     /* -- end -- */
     /* end */
 

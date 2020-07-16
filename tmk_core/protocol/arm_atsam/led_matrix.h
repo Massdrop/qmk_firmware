@@ -128,7 +128,7 @@ extern void *led_setups[];
 #define LED_FLAG_USE_PATTERN         0x20       //Use a specific pattern ID (set pattern_id to desired output pattern)
 #define LED_FLAG_USE_ROTATE_PATTERN  0x40       //Use pattern the user has cycled to manually
 // Custom
-#define LED_FLAG_MATCH_DEFAULT_LAYER 0X80
+#define LED_FLAG_MATCH_DEFAULT_LAYER 0X80       //Match on the current default layer
 
 typedef struct led_instruction_s {
     uint16_t flags; // Bitfield for LED instructions
