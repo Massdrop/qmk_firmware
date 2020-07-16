@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_EDG_M, L_T_MD, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, L_EDG_I, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MD_BOOT, TG_NKRO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          L_BRI,   L_EDG_D, \
-        XXXXXXX, XXXXXXX, XXXXXXX,                            DBG_FAC,                            XXXXXXX, TO(0),   L_PTP,   L_BRD,   L_PTN  \
+        XXXXXXX, XXXXXXX, XXXXXXX,                            DBG_FAC,                            TO(0),   XXXXXXX,   L_PTP,   L_BRD,   L_PTN  \
     ),
     /* Default Layers
     [0] = LAYOUT(
@@ -289,7 +289,7 @@ led_instruction_t led_instructions[] = {
     //Examples are below
 
     //All LEDs use the user's selected pattern (this is the factory default)
-     { .flags = LED_FLAG_USE_ROTATE_PATTERN },
+    // { .flags = LED_FLAG_USE_ROTATE_PATTERN },
 
     //Specific LEDs use the user's selected pattern while all others are off
     // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 0xFFFFFFFF, .id1 = 0xAAAAAAAA, .id2 = 0x55555555, .id3 = 0x11111111 },
@@ -317,22 +317,40 @@ led_instruction_t led_instructions[] = {
     // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 0xFFFFFFFF, .id1 = 0xFFFFFFFF, .id2 = 0x00000007, .r = 255 },
     // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN , .id2 = 0xFFFFFFF8, .id3 = 0x000003FF },
 
+    /* Default */
+    // Use selected pattern across keyboard
+    { .flags = LED_FLAG_USE_ROTATE_PATTERN },
+    // Home, PgUp, PgDn are OFF
+    { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
+    /* end */
+
     /* General Modifiers Layer */
     // Esc is RED
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1, .r = 255 }
+    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 1, .r = 255 },
     // Function Keys and Left/Right are ORANGE
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 8190, id2 = 5, .r = 255, .g = 165 }
-    // Home, PgUp, PgDown use DEFAULT colour
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 536870912, .id1 = 33556480}
+    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 8190, .id2 = 5, .r = 255, .g = 165 },
+    // Home, PgUp, PgDn use DEFAULT colour
+    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 536870912, .id1 = 33556480 },
     // Right alt is GREEN
-    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1073741824, .g = 255}
+    { .layer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1073741824, .g = 255 },
     /* end */
 
     /* Keyboard Settings Mode */
-    // All LEDs are off
-    { .layer = 2, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_NULL }
+    // All LEDs are off except the edge
+    { .layer = 2, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 536870912, .id1 = 33556480 },
+    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN, .id2 = 4294967288, .id3 = 511 },
+    // Backspace, Del, Home, "\", N, Space are WHITE
+    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255 },
+    // Up, Down, Right alt are ORANGE
+    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 165 },
+    // Left, Right are GREEN
+    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 5, .g = 255 },
+    // PgUp, PgDn are BLUE
+    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 33556480, .b = 255 },
+    // B is RED
+    { .layer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 131072, .r = 255 },
     /* end */
 
     //end must be set to 1 to indicate end of instruction set
-     { .end = 1 }
+    { .end = 1 }
 };
