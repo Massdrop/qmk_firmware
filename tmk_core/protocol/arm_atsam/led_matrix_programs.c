@@ -105,17 +105,17 @@ led_setup_t leds_rainbow_s[] = {
 //Add the new animation name to the list below following its format
 
 void *led_setups[] = {
-    leds_rainbow_s,
-    leds_rainbow_ns,
+    // leds_rainbow_s,
+    // leds_rainbow_ns,
     leds_teal_salmon,
-    leds_yellow,
-    leds_red,
-    leds_green,
-    leds_blue,
-    leds_white,
-    leds_white_with_red_stripe,
-    leds_black_with_red_stripe,
-    leds_off
+    // leds_yellow,
+    // leds_red,
+    // leds_green,
+    // leds_blue,
+    // leds_white,
+    // leds_white_with_red_stripe,
+    // leds_black_with_red_stripe,
+    // leds_off
 };
 
 const uint8_t led_setups_count = sizeof(led_setups) / sizeof(led_setups[0]);

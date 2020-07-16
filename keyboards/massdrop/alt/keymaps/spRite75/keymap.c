@@ -318,15 +318,17 @@ led_instruction_t led_instructions[] = {
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 165 },
     // Left, Right are GREEN
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 5, .g = 255 },
-    // PgUp, PgDn are BLUE
-    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 33556480, .b = 255 },
+    // PgUp, PgDn are CYAN
+    { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 33556480, .b = 255, .g = 255 },
     // B is RED
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id1 = 131072, .r = 255 },
     /* -- Default Layer Status Indicators -- */
     // -- 1
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 2, .r = 255, .g = 255, .b = 255 },
+    { .layer = 10, .dLayer = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 2, .g = 255 },
     // -- 2
     { .layer = 10, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .r = 255, .g = 255, .b = 255 },
+    { .layer = 10, .dLayer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB, .id0 = 4, .g = 255 },
     /* -- end -- */
     /* end */
 

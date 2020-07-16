@@ -127,6 +127,8 @@ extern void *led_setups[];
 #define LED_FLAG_USE_RGB             0x10       //Use a specific RGB value (set r, g, b to desired output color values)
 #define LED_FLAG_USE_PATTERN         0x20       //Use a specific pattern ID (set pattern_id to desired output pattern)
 #define LED_FLAG_USE_ROTATE_PATTERN  0x40       //Use pattern the user has cycled to manually
+// Custom
+#define LED_FLAG_MATCH_DEFAULT_LAYER 0X80
 
 typedef struct led_instruction_s {
     uint16_t flags; // Bitfield for LED instructions
@@ -137,6 +139,7 @@ typedef struct led_instruction_s {
     uint32_t id4; // Bitwise id, IDs 128-159
     uint32_t id5; // Bitwise id, IDs 160-191
     uint8_t layer;
+    uint8_t dLayer;
     uint8_t r;
     uint8_t g;
     uint8_t b;

@@ -577,6 +577,12 @@ static void led_matrix_massdrop_config_override(int i)
                 }
             }
 
+            // Check if this to current default layer state
+             if ((led_cur_instruction->flags & LED_FLAG_MATCH_DEFAULT_LAYER) &&
+                (led_cur_instruction->dLayer != biton32(default_layer_state))) {
+                goto next_iter;
+            }
+
             if (led_cur_instruction->flags & LED_FLAG_USE_RGB) {
                 ro = led_cur_instruction->r;
                 go = led_cur_instruction->g;
