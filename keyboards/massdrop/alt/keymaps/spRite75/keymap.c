@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 
+//---KEYS
 enum alt_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase
     L_BRD,              //LED Brightness Decrease
@@ -35,6 +36,34 @@ enum alt_keycodes {
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
 
+//---TAPDANCES
+enum {
+  TD_LCADET = 0,
+  TD_RCADET
+};
+typedef struct {
+    bool is_press_action;
+    uint8_t state;
+} tap;
+
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD,
+    DOUBLE_TAP,
+    DOUBLE_HOLD,
+    DOUBLE_SINGLE_TAP, // Send two single taps
+    TRIPLE_TAP,
+    TRIPLE_HOLD
+};
+
+// Tap dance enums
+enum {
+    X_CTL,
+    SOME_OTHER_DANCE
+};
+
+//---LAYOUTS
+
 keymap_config_t keymap_config;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -48,11 +77,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     /* Coding Layout */
     [1] = LAYOUT(
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
-        KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC,          KC_UP,   KC_AUDIO_VOL_DOWN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_GRV,        KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,       KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,       KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS,       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,       KC_ENT,           KC_AUDIO_VOL_UP, \
+        TD(TD_LCADET), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(TD_RCADET), KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL,       KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),         KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* Overwatch Layout - functionally same as General Layout */
     [2] = LAYOUT(
@@ -314,6 +343,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+//---KEY DEFS
         case CHAT_ENTR:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_ENTER));
@@ -338,11 +368,96 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_on(8);
             }
             return false;
+//---
         default:
             return true; //Process all other keycodes normally
     }
 }
 
+//---TAPDANCE DEFS
+uint8_t cur_dance(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (!state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted) return DOUBLE_SINGLE_TAP;
+        else if (state->pressed) return DOUBLE_HOLD;
+        else return DOUBLE_TAP;
+    }
+    if (state->count == 3) {
+        if (state->interrupted || !state->pressed) return TRIPLE_TAP;
+        else return TRIPLE_HOLD;
+    } else return 8; // Magic number. At some point this method will expand to work for more presses
+}
+
+static tap td_left_cadet_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_left_cadet_finished(qk_tap_dance_state_t *state, void *user_data) {
+    td_left_cadet_state.state = cur_dance(state);
+    switch (td_left_cadet_state.state) {
+        case SINGLE_HOLD:
+            register_code(KC_LSFT);
+            break;
+        case SINGLE_TAP:
+            SEND_STRING("(");
+            break;
+        case DOUBLE_TAP:
+            SEND_STRING("[");
+            break;
+        case TRIPLE_TAP:
+            SEND_STRING("{");
+            break;
+    }
+}
+
+void td_left_cadet_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (td_left_cadet_state.state) {
+        case SINGLE_HOLD:
+            unregister_code(KC_LSFT);
+            break;
+    }
+}
+
+static tap td_right_cadet_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_right_cadet_finished(qk_tap_dance_state_t *state, void *user_data) {
+    td_right_cadet_state.state = cur_dance(state);
+    switch (td_right_cadet_state.state) {
+        case SINGLE_HOLD:
+            register_code(KC_RSFT);
+            break;
+        case SINGLE_TAP:
+            SEND_STRING(")");
+            break;
+        case DOUBLE_TAP:
+            SEND_STRING("]");
+            break;
+        case TRIPLE_TAP:
+            SEND_STRING("}");
+            break;
+    }
+}
+
+void td_right_cadet_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (td_right_cadet_state.state) {
+        case SINGLE_HOLD:
+            unregister_code(KC_RSFT);
+            break;
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_LCADET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_left_cadet_finished, td_left_cadet_reset),
+    [TD_RCADET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_right_cadet_finished, td_right_cadet_reset),
+};
+
+//---LEDs
 led_instruction_t led_instructions[] = {
     /* Colour definitions
         DULLWHITE (, .r = 200, .g = 200, .b = 200)
