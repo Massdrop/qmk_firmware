@@ -39,7 +39,9 @@ enum alt_keycodes {
 //---TAPDANCES
 enum {
   TD_LCADET = 0,
-  TD_RCADET
+  TD_RCADET,
+  TD_COLONS,
+  TD_QUOTES
 };
 typedef struct {
     bool is_press_action;
@@ -54,12 +56,6 @@ enum {
     DOUBLE_SINGLE_TAP, // Send two single taps
     TRIPLE_TAP,
     TRIPLE_HOLD
-};
-
-// Tap dance enums
-enum {
-    X_CTL,
-    SOME_OTHER_DANCE
 };
 
 //---LAYOUTS
@@ -77,11 +73,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     /* Coding Layout */
     [1] = LAYOUT(
-        KC_GRV,        KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,       KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,       KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS,       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,       KC_ENT,           KC_AUDIO_VOL_UP, \
-        TD(TD_LCADET), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(TD_RCADET), KC_UP,   KC_AUDIO_VOL_DOWN, \
-        KC_LCTL,       KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),         KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_GRV,        KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,          KC_MINS,       KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,          KC_LBRC,       KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS,       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    TD(TD_COLONS), TD(TD_QUOTES), KC_ENT,           KC_AUDIO_VOL_UP, \
+        TD(TD_LCADET), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,       TD(TD_RCADET), KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL,       KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT,       MO(9),         KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* Overwatch Layout - functionally same as General Layout */
     [2] = LAYOUT(
@@ -455,6 +451,8 @@ void td_right_cadet_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LCADET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_left_cadet_finished, td_left_cadet_reset),
     [TD_RCADET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_right_cadet_finished, td_right_cadet_reset),
+    [TD_COLONS] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
+    [TD_QUOTES] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO)
 };
 
 //---LEDs
@@ -478,8 +476,8 @@ led_instruction_t led_instructions[] = {
     /* end */
 
     /* Coding - default layer 1 */
-    // Highlight Shift keys with DULLWHITE
-    { .dLayer = 1, .id1 = 8392704, .r = 200, .g = 200, .b = 200, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Highlight Shift, ;, ' with DULLWHITE
+    { .dLayer = 1, .id1 = 8393472, .r = 200, .g = 200, .b = 200, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
     /* Overwatch - default layer 2 */
@@ -502,12 +500,12 @@ led_instruction_t led_instructions[] = {
     { .dLayer = 3, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
     // Movement - W, A, S, D, Left Ctrl, Left Shift, Space are BLUE
     { .dLayer = 3, .id0 = 2147614720, .id1 = 603983875, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
-    // Abilities - Q, E, R, F, G are ORANGE
-    { .dLayer = 3, .id0 = 851968, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Abilities - Q, E, R, F, G, B are ORANGE
+    { .dLayer = 3, .id0 = 851968, .id1 = 131084, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Grenades - C and V are GREEN
     { .dLayer = 3, .id1 = 98304, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
-    // Communication - CapsLock, Y, U are MAGENTA
-    { .dLayer = 3, .id0 = 1080033280, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Communication - CapsLock, Y, U, Z are MAGENTA
+    { .dLayer = 3, .id0 = 1080033280, .id1 = 8192, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
     /* Chat Mode */

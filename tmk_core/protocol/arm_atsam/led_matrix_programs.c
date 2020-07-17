@@ -117,16 +117,34 @@ led_setup_t leds_rainbow_s[] = {
 //   uint8_t end;      //Set to signal end of the setup
 // } led_setup_t;
 
-// spRite75 Teal <-> Salmon
-led_setup_t spRite75_leds_teal_salmon[] = {
+//---LED PROGRAMS
+
+// spRite75 PinkLemonade
+led_setup_t spRite75_leds_PinkLemonade[] = {
     { .hs = 0,  .he = 33,  .rs = 24,  .re = 24,  .gs = 215, .ge = 215, .bs = 204, .be = 204, .ef = EF_OVER },
     { .hs = 33, .he = 66,  .rs = 24,  .re = 255, .gs = 215, .ge = 114, .bs = 204, .be = 118, .ef = EF_OVER },
     { .hs = 66, .he = 100, .rs = 255, .re = 255, .gs = 114, .ge = 114, .bs = 118, .be = 118, .ef = EF_OVER },
     { .end = 1 },
 };
 
+// spRite75 SexOnTheBeach
+led_setup_t spRite75_leds_SexOnTheBeach[] = {
+    { .hs = 0,  .he = 100,  .rs = 255,  .re = 255,  .gs = 144, .ge = 0, .bs = 0, .be = 155, .ef = EF_OVER },
+    { .end = 1 },
+};
+
+// spRite75 Capsicum
+led_setup_t spRite75_leds_Capsicum[] = {
+    { .hs = 0,  .he = 33,  .rs = 255,  .re = 255,  .gs = 0, .ge = 0, .bs = 0, .be = 0, .ef = EF_OVER },
+    { .hs = 33, .he = 66, .rs = 0, .re = 0, .gs = 255, .ge = 255, .bs = 0, .be = 0, .ef = EF_OVER },
+    { .hs = 66, .he = 100,  .rs = 255,  .re = 255, .gs = 255, .ge = 255, .bs = 0, .be = 0, .ef = EF_OVER },
+    { .end = 1 },
+};
+
 void *led_setups[] = {
-    spRite75_leds_teal_salmon,
+    spRite75_leds_PinkLemonade,
+    spRite75_leds_SexOnTheBeach,
+    spRite75_leds_Capsicum,
     leds_rainbow_ns,
     leds_rainbow_s
 };
