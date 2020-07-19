@@ -14,7 +14,8 @@
       "*.hpp": "cpp",
       "xstddef": "c",
       "type_traits": "c",
-      "utility": "c"
+      "utility": "c",
+      "random": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.dimInactiveRegions": false

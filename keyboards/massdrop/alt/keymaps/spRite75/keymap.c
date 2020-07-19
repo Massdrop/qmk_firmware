@@ -41,7 +41,9 @@ enum {
   TD_LCADET = 0,
   TD_RCADET,
   TD_COLONS,
-  TD_QUOTES
+  TD_QUOTES,
+  TD_DASH,
+  TD_LALT,
 };
 typedef struct {
     bool is_press_action;
@@ -62,41 +64,51 @@ enum {
 
 keymap_config_t keymap_config;
 
+enum {
+    LO_BASE = 0,
+    LO_CODING,
+    LO_OVERWATCH,
+    LO_CSGO,
+    LO_CHAT,
+    LO_GENMOD,
+    LO_SETTINGS
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* General Layout */
-    [0] = LAYOUT(
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    [LO_BASE] = LAYOUT(
+        KC_GRV,  KC_1,    KC_2,        KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,        KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,        KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
+        KC_LSFT, KC_Z,    KC_X,        KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL, KC_LGUI, TD(TD_LALT),                            KC_SPC,                             KC_RALT, MO(LO_GENMOD),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* Coding Layout */
-    [1] = LAYOUT(
-        KC_GRV,        KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,          KC_MINS,       KC_EQL,  KC_BSPC, KC_DEL,  \
+    [LO_CODING] = LAYOUT(
+        KC_GRV,        KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,          TD(TD_DASH),   KC_EQL,  KC_BSPC, KC_DEL,  \
         KC_TAB,        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,          KC_LBRC,       KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS,       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    TD(TD_COLONS), TD(TD_QUOTES), KC_ENT,           KC_AUDIO_VOL_UP, \
-        TD(TD_LCADET), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,       TD(TD_RCADET), KC_UP,   KC_AUDIO_VOL_DOWN, \
-        KC_LCTL,       KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT,       MO(9),         KC_LEFT, KC_DOWN, KC_RGHT  \
+        KC_CAPS,       KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    TD(TD_COLONS), TD(TD_QUOTES),          KC_ENT,  KC_AUDIO_VOL_UP, \
+        TD(TD_LCADET), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,       TD(TD_RCADET),          KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL,       KC_LGUI, TD(TD_LALT),                            KC_SPC,                         KC_RALT,       MO(LO_GENMOD), KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* Overwatch Layout - functionally same as General Layout */
-    [2] = LAYOUT(
-        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,    KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,    KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          CHAT_ENTR,  KC_AUDIO_VOL_UP, \
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,      KC_AUDIO_VOL_DOWN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN,    KC_RGHT  \
+    [LO_OVERWATCH] = LAYOUT(
+        KC_ESC,  KC_1,    KC_2,        KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,    KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,        KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,    KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,        KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          CHAT_ENTR,  KC_AUDIO_VOL_UP, \
+        KC_LSFT, KC_Z,    KC_X,        KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,      KC_AUDIO_VOL_DOWN, \
+        KC_LCTL, KC_LGUI, TD(TD_LALT),                            KC_SPC,                             KC_RALT, MO(LO_GENMOD),   KC_LEFT, KC_DOWN,    KC_RGHT  \
     ),
     /* CSGO Layout - functionally same as General Layout */
-    [3] = LAYOUT(
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    CSGO_Y,  CSGO_U,  KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(9),   KC_LEFT, KC_DOWN, KC_RGHT  \
+    [LO_CSGO] = LAYOUT(
+        KC_GRV,  KC_1,    KC_2,        KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+        KC_TAB,  KC_Q,    KC_W,        KC_E,    KC_R,    KC_T,    CSGO_Y,  CSGO_U,  KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_MEDIA_PLAY_PAUSE, \
+        KC_CAPS, KC_A,    KC_S,        KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_AUDIO_VOL_UP, \
+        KC_LSFT, KC_Z,    KC_X,        KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_AUDIO_VOL_DOWN, \
+        KC_LCTL, KC_LGUI, TD(TD_LALT),                            KC_SPC,                             KC_RALT, MO(LO_GENMOD),   KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     /* Chat Mode */
-    [8] = LAYOUT(
+    [LO_CHAT] = LAYOUT(
         CHAT_ESC, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, \
         _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, \
         _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          CHAT_ENTR, _______, \
@@ -104,37 +116,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______, _______,                            _______,                            _______, XXXXXXX, _______, _______,   _______  \
     ),
     /* General Modifiers */
-    [9] = LAYOUT(
+    [LO_GENMOD] = LAYOUT(
         KC_ESC,     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,               _______, _______, \
         _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PSCR, _______, _______,              _______, KC_HOME,  \
         _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                       _______, KC_PGUP, \
         _______,    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                       _______, KC_PGDN, \
-        _______,    _______, _______,                            _______,                            TG(10),   _______, KC_MEDIA_PREV_TRACK, _______, KC_MEDIA_NEXT_TRACK   \
+        _______,    _______, KC_LALT,                            _______,                            TG(LO_SETTINGS),  _______, KC_MEDIA_PREV_TRACK, _______, KC_MEDIA_NEXT_TRACK   \
     ),
     /* Keyboad Settings Mode */
-    [10] = LAYOUT(
+    [LO_SETTINGS] = LAYOUT(
         XXXXXXX, DF(0), DF(1), DF(2), DF(3), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_T_BR,  L_T_ONF, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, L_EDG_M, L_T_MD, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, L_EDG_I, \
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MD_BOOT, TG_NKRO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          L_BRI,   L_EDG_D, \
-        XXXXXXX, XXXXXXX, XXXXXXX,                            DBG_FAC,                            TG(10),   XXXXXXX,   L_PTP,   L_BRD,   L_PTN  \
+        XXXXXXX, XXXXXXX, XXXXXXX,                            DBG_FAC,                            TG(LO_SETTINGS),   XXXXXXX,   L_PTP,   L_BRD,   L_PTN  \
     ),
-    /* Default Layers
-    [0] = LAYOUT(
-        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_HOME, \
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT  \
-    ),
-    [1] = LAYOUT(
-        KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, KC_MUTE, \
-        L_T_BR,  L_PSD,   L_BRI,   L_PSI,   L_EDG_I, _______, _______, _______, U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, KC_END,  \
-        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, _______, _______, _______, _______, _______,          _______, KC_VOLU, \
-        _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, TG_NKRO, _______, _______, _______, _______, _______,          KC_PGUP, KC_VOLD, \
-        _______, _______, _______,                            DBG_FAC,                            _______, _______, KC_HOME, KC_PGDN, KC_END   \
-    ),
-    */
     /*
     [X] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -343,25 +339,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CHAT_ENTR:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_ENTER));
-                layer_invert(8);
+                layer_invert(LO_CHAT);
             }
             return false;
         case CHAT_ESC:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_ESCAPE));
-                layer_off(8);
+                layer_off(LO_CHAT);
             }
             return false;
         case CSGO_Y:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_Y));
-                layer_on(8);
+                layer_on(LO_CHAT);
             }
             return false;
         case CSGO_U:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_U));
-                layer_on(8);
+                layer_on(LO_CHAT);
             }
             return false;
 //---
@@ -448,11 +444,40 @@ void td_right_cadet_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+
+static tap td_oneshot_lalt_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_oneshot_lalt(qk_tap_dance_state_t *state, void *user_data) {
+    td_oneshot_lalt_state.state = cur_dance(state);
+    switch (td_oneshot_lalt_state.state) {
+        case SINGLE_HOLD:
+            register_code(KC_LALT);
+            break;
+        default:
+            set_oneshot_layer(LO_GENMOD, ONESHOT_START);
+            clear_oneshot_layer_state(ONESHOT_PRESSED);
+    }
+}
+
+void td_oneshot_lalt_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (td_oneshot_lalt_state.state) {
+        case SINGLE_HOLD:
+            unregister_code(KC_LALT);
+            break;
+    }
+}
+
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LCADET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_left_cadet_finished, td_left_cadet_reset),
     [TD_RCADET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_right_cadet_finished, td_right_cadet_reset),
     [TD_COLONS] = ACTION_TAP_DANCE_DOUBLE(KC_SCLN, KC_COLN),
-    [TD_QUOTES] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO)
+    [TD_QUOTES] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO),
+    [TD_DASH] = ACTION_TAP_DANCE_DOUBLE(KC_MINS, KC_UNDS),
+    [TD_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_oneshot_lalt, td_oneshot_lalt_reset),
 };
 
 //---LEDs
@@ -476,85 +501,87 @@ led_instruction_t led_instructions[] = {
     /* end */
 
     /* Coding - default layer 1 */
-    // Highlight Shift, ;, ' with DULLWHITE
-    { .dLayer = 1, .id1 = 8393472, .r = 200, .g = 200, .b = 200, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    // Highlight Shift, ";", "'", "-" with DULLWHITE
+    { .dLayer = LO_CODING, .id0 = 2048, .id1 = 8393472, .r = 200, .g = 200, .b = 200, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
     /* Overwatch - default layer 2 */
     // All LEDs are off except the edge and Fn
-    { .dLayer = 2, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
-    { .dLayer = 2, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
+    { .dLayer = LO_OVERWATCH, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .dLayer = LO_OVERWATCH, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
     // Movement - W, A, S, D, Left Ctrl, Space are BLUE
-    { .dLayer = 2, .id0 = 2147614720, .id1 = 603979779, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_OVERWATCH, .id0 = 2147614720, .id1 = 603979779, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Ultimate - Q is YELLOW
-    { .dLayer = 2, .id0 = 65536, .r = 255, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_OVERWATCH, .id0 = 65536, .r = 255, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Abilities - Left Shift, E, F are ORANGE
-    { .dLayer = 2, .id0 = 786432, .id1 = 4100, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_OVERWATCH, .id0 = 786432, .id1 = 4100, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Communication - CapsLock, Z, X, C, Enter are MAGENTA
-    { .dLayer = 2, .id0 = 1073741824, .id1 = 58368, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_OVERWATCH, .id0 = 1073741824, .id1 = 58368, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
     /* CSGO - default layer 3 */
     // All LEDs are off except the edge and Fn
-    { .dLayer = 3, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
-    { .dLayer = 3, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
+    { .dLayer = LO_CSGO, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .dLayer = LO_CSGO, .id1 = 2147483648, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN },
+    // Inventory - 1, 2, 3, 5 are YELLOW
+    { .dLayer = LO_CSGO, .id0 = 46, .r = 255, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Movement - W, A, S, D, Left Ctrl, Left Shift, Space are BLUE
-    { .dLayer = 3, .id0 = 2147614720, .id1 = 603983875, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_CSGO, .id0 = 2147614720, .id1 = 603983875, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Abilities - Q, E, R, F, G, B are ORANGE
-    { .dLayer = 3, .id0 = 851968, .id1 = 131084, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_CSGO, .id0 = 851968, .id1 = 131084, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Grenades - C and V are GREEN
-    { .dLayer = 3, .id1 = 98304, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_CSGO, .id1 = 98304, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Communication - CapsLock, Y, U, Z are MAGENTA
-    { .dLayer = 3, .id0 = 1080033280, .id1 = 8192, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .dLayer = LO_CSGO, .id0 = 1080033280, .id1 = 8192, .r = 255, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
     /* Chat Mode */
     // Light up all keys
-    { .layer = 8, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
+    { .layer = LO_CHAT, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
     // Enter is GREEN
-    { .layer = 8, .id1 = 1024, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
+    { .layer = LO_CHAT, .id1 = 1024, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     // Esc is RED
-    { .layer = 8, .id0 = 1, .r = 255, .g = 0, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_CHAT, .id0 = 1, .r = 255, .g = 0, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     /* end */
 
     /* General Modifiers Layer */
     // Esc is RED
-    { .layer = 9, .id0 = 1, .r = 255, .g = 0, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_GENMOD, .id0 = 1, .r = 255, .g = 0, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Function Keys and Left/Right are ORANGE
-    { .layer = 9, .id0 = 8190, .id2 = 5, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_GENMOD, .id0 = 8190, .id2 = 5, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Home, PgUp, PgDn use DEFAULT colour
-    { .layer = 9, .id0 = 536870912, .id1 = 33556480, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
+    { .layer = LO_GENMOD, .id0 = 536870912, .id1 = 33556480, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
     // Right alt is LIGHTGREEN
-    { .layer = 9, .id1 = 1073741824, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_GENMOD, .id1 = 1073741824, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     /* end */
 
     /* Keyboard Settings Mode */
     // All LEDs are off except the edge
-    { .layer = 10, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 10, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
+    { .layer = LO_SETTINGS, .flags = LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id2 = 4294967288, .id3 = 511, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_ROTATE_PATTERN },
     // Backspace, Del, Home, "\", N, Space are WHITE
-    { .layer = 10, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 805330944, .id1 = 537133056, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Up, Down, Right alt are ORANGE
-    { .layer = 10, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id1 = 1090519040, .id2 = 2, .r = 255, .g = 102, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // Left, Right are LIGHTGREEN
-    { .layer = 10, .id2 = 5, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id2 = 5, .r = 0, .g = 255, .b = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // PgUp, PgDn are BLUE
-    { .layer = 10, .id1 = 33556480, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id1 = 33556480, .r = 0, .g = 0, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     // B is RED
-    { .layer = 10, .id1 = 131072, .r = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id1 = 131072, .r = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
     /* -- Default Layer Status Indicators -- */
     // -- 1
-    { .layer = 10, .id0 = 2, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 10, .id0 = 2, .r = 0, .g = 255, .b = 0, .dLayer = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 2, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 2, .r = 0, .g = 255, .b = 0, .dLayer = 0, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     // -- 2
-    { .layer = 10, .id0 = 4, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 10, .id0 = 4, .r = 0, .g = 255, .b = 0, .dLayer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 4, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 4, .r = 0, .g = 255, .b = 0, .dLayer = 1, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     // -- 3
-    { .layer = 10, .id0 = 8, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 10, .id0 = 8, .r = 0, .g = 255, .b = 0, .dLayer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 8, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 8, .r = 0, .g = 255, .b = 0, .dLayer = 2, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     // -- 4
-    { .layer = 10, .id0 = 16, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
-    { .layer = 10, .id0 = 16, .r = 0, .g = 255, .b = 0, .dLayer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 16, .r = 255, .g = 255, .b = 255, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB },
+    { .layer = LO_SETTINGS, .id0 = 16, .r = 0, .g = 255, .b = 0, .dLayer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     /* -- end -- */
     /* end */
 
