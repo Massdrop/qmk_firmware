@@ -129,6 +129,8 @@ extern void *led_setups[];
 #define LED_FLAG_USE_ROTATE_PATTERN  0x40       //Use pattern the user has cycled to manually
 // Custom
 #define LED_FLAG_MATCH_DEFAULT_LAYER 0X80       //Match on the current default layer
+#define LED_FLAG_CONDITION 0X81                 //Match if condition is true
+
 
 typedef struct led_instruction_s {
     uint16_t flags; // Bitfield for LED instructions
@@ -140,6 +142,7 @@ typedef struct led_instruction_s {
     uint32_t id5; // Bitwise id, IDs 160-191
     uint8_t layer;
     uint8_t dLayer;
+    bool (*condition_func)(void);
     uint8_t r;
     uint8_t g;
     uint8_t b;

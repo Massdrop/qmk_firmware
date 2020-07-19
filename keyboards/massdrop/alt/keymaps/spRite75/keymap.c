@@ -480,6 +480,14 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_oneshot_lalt, td_oneshot_lalt_reset),
 };
 
+bool spRite75_capslock_enabled(void) {
+    if (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
 //---LEDs
 led_instruction_t led_instructions[] = {
     /* Colour definitions
@@ -584,6 +592,8 @@ led_instruction_t led_instructions[] = {
     { .layer = LO_SETTINGS, .id0 = 16, .r = 0, .g = 255, .b = 0, .dLayer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     /* -- end -- */
     /* end */
+    // (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK))
+    { .condition_func = spRite75_capslock_enabled, .id0 = 1073741824, .flags = LED_FLAG_MATCH_ID | LED_FLAG_CONDITION | LED_FLAG_USE_RGB },
 
     //end must be set to 1 to indicate end of instruction set
     { .end = 1 }
