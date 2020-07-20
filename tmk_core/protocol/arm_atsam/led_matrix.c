@@ -571,6 +571,13 @@ static void led_matrix_massdrop_config_override(int i)
     } else {
         led_instruction_t* led_cur_instruction = led_instructions;
         while (!led_cur_instruction->end) {
+            // Check if an arbitrary condition is true
+            if ((led_cur_instruction->flags & LED_FLAG_CONDITION) &&
+                (!led_cur_instruction->condition_func || !led_cur_instruction->condition_func())
+            ) {
+                goto next_iter;
+            }
+
             // Check if this applies to current layer
             if ((led_cur_instruction->flags & LED_FLAG_MATCH_LAYER) &&
                 (led_cur_instruction->layer != highest_active_layer)) {
@@ -592,16 +599,6 @@ static void led_matrix_massdrop_config_override(int i)
              if ((led_cur_instruction->flags & LED_FLAG_MATCH_DEFAULT_LAYER) &&
                 (led_cur_instruction->dLayer != biton32(default_layer_state))) {
                 goto next_iter;
-            }
-
-
-            // Check if an arbitrary condition is true
-            if (led_cur_instruction->flags & LED_FLAG_CONDITION) {
-                if (!led_cur_instruction->condition_func) {
-                    goto next_iter;
-                } else if (!led_cur_instruction->condition_func()) {
-                    goto next_iter;
-                }
             }
 
             if (led_cur_instruction->flags & LED_FLAG_USE_RGB) {

@@ -1,5 +1,4 @@
 #include QMK_KEYBOARD_H
-
 //---KEYS
 enum alt_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase
@@ -513,6 +512,8 @@ led_instruction_t led_instructions[] = {
     { .dLayer = LO_CODING, .id0 = 2048, .id1 = 8393472, .r = 200, .g = 200, .b = 200, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB },
     /* end */
 
+    { .condition_func = spRite75_capslock_enabled, .id0 = 1073741824, .flags = LED_FLAG_MATCH_ID | LED_FLAG_CONDITION | LED_FLAG_USE_RGB },
+
     /* Overwatch - default layer 2 */
     // All LEDs are off except the edge and Fn
     { .dLayer = LO_OVERWATCH, .flags = LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
@@ -592,8 +593,6 @@ led_instruction_t led_instructions[] = {
     { .layer = LO_SETTINGS, .id0 = 16, .r = 0, .g = 255, .b = 0, .dLayer = 3, .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_MATCH_DEFAULT_LAYER | LED_FLAG_USE_RGB },
     /* -- end -- */
     /* end */
-
-    { .condition_func = spRite75_capslock_enabled, .id0 = 1073741824, .flags = LED_FLAG_MATCH_ID | LED_FLAG_CONDITION | LED_FLAG_USE_RGB },
 
     //end must be set to 1 to indicate end of instruction set
     { .end = 1 }

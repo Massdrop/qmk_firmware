@@ -129,7 +129,7 @@ extern void *led_setups[];
 #define LED_FLAG_USE_ROTATE_PATTERN  0x40       //Use pattern the user has cycled to manually
 // Custom
 #define LED_FLAG_MATCH_DEFAULT_LAYER 0X80       //Match on the current default layer
-#define LED_FLAG_CONDITION 0X81                 //Match if condition is true
+#define LED_FLAG_CONDITION           0X100      //Match if condition is true
 
 
 typedef struct led_instruction_s {
