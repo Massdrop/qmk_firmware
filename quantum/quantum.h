@@ -28,10 +28,11 @@
 #include "matrix.h"
 #include "keymap.h"
 #ifdef BACKLIGHT_ENABLE
-    #include "backlight.h"
-#endif
-#if !defined(RGBLIGHT_ENABLE) && !defined(RGB_MATRIX_ENABLE)
-	#include "rgb.h"
+    #ifdef LED_MATRIX_ENABLE
+        #include "ledmatrix.h"
+    #else
+        #include "backlight.h"
+    #endif
 #endif
 #ifdef RGBLIGHT_ENABLE
   #include "rgblight.h"
@@ -41,10 +42,6 @@
         #define RGBLIGHT_H_DUMMY_DEFINE
         #include "rgblight.h"
     #endif
-#endif
-
-#ifdef SPLIT_KEYBOARD
-    #include "split_flags.h"
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
@@ -138,28 +135,34 @@ extern uint32_t default_layer_state;
     #include "hd44780.h"
 #endif
 
+#ifdef HAPTIC_ENABLE
+    #include "haptic.h"
+#endif
+
 //Function substitutions to ease GPIO manipulation
 #ifdef __AVR__
+    #define PIN_ADDRESS(p, offset) _SFR_IO8(ADDRESS_BASE + (p >> PORT_SHIFTER) + offset)
+
     #define pin_t uint8_t
-    #define setPinInput(pin) _SFR_IO8((pin >> 4) + 1) &= ~ _BV(pin & 0xF)
+    #define setPinInput(pin) PIN_ADDRESS(pin, 1) &= ~ _BV(pin & 0xF)
     #define setPinInputHigh(pin) ({\
-            _SFR_IO8((pin >> 4) + 1) &= ~ _BV(pin & 0xF);\
-            _SFR_IO8((pin >> 4) + 2) |=   _BV(pin & 0xF);\
+            PIN_ADDRESS(pin, 1) &= ~ _BV(pin & 0xF);\
+            PIN_ADDRESS(pin, 2) |=   _BV(pin & 0xF);\
             })
     #define setPinInputLow(pin) _Static_assert(0, "AVR Processors cannot impliment an input as pull low")
-    #define setPinOutput(pin) _SFR_IO8((pin >> 4) + 1) |= _BV(pin & 0xF)
+    #define setPinOutput(pin) PIN_ADDRESS(pin, 1) |= _BV(pin & 0xF)
 
-    #define writePinHigh(pin) _SFR_IO8((pin >> 4) + 2) |=  _BV(pin & 0xF)
-    #define writePinLow(pin) _SFR_IO8((pin >> 4) + 2) &= ~_BV(pin & 0xF)
+    #define writePinHigh(pin) PIN_ADDRESS(pin, 2) |=  _BV(pin & 0xF)
+    #define writePinLow(pin) PIN_ADDRESS(pin, 2) &= ~_BV(pin & 0xF)
     static inline void writePin(pin_t pin, uint8_t level){
         if (level){
-            _SFR_IO8((pin >> 4) + 2) |=  _BV(pin & 0xF);
+            PIN_ADDRESS(pin, 2) |=  _BV(pin & 0xF);
         } else {
-            _SFR_IO8((pin >> 4) + 2) &= ~_BV(pin & 0xF);
+            PIN_ADDRESS(pin, 2) &= ~_BV(pin & 0xF);
         }
     }
 
-    #define readPin(pin) (_SFR_IO8(pin >> 4) & _BV(pin & 0xF))
+    #define readPin(pin) ((bool)(PIN_ADDRESS(pin, 0) & _BV(pin & 0xF)))
 #elif defined(PROTOCOL_CHIBIOS)
     #define pin_t ioline_t
     #define setPinInput(pin) palSetLineMode(pin, PAL_MODE_INPUT)
@@ -184,6 +187,10 @@ extern uint32_t default_layer_state;
 #define ADD_SLASH_X(y) STRINGIZE(\x ## y)
 #define SYMBOL_STR(x) ADD_SLASH_X(x)
 
+#define SS_TAP_CODE 1
+#define SS_DOWN_CODE 2
+#define SS_UP_CODE 3
+
 #define SS_TAP(keycode) "\1" SYMBOL_STR(keycode)
 #define SS_DOWN(keycode) "\2" SYMBOL_STR(keycode)
 #define SS_UP(keycode) "\3" SYMBOL_STR(keycode)
@@ -195,9 +202,11 @@ extern uint32_t default_layer_state;
 #define SS_LALT(string) SS_DOWN(X_LALT) string SS_UP(X_LALT)
 #define SS_LSFT(string) SS_DOWN(X_LSHIFT) string SS_UP(X_LSHIFT)
 #define SS_RALT(string) SS_DOWN(X_RALT) string SS_UP(X_RALT)
+#define SS_ALGR(string) SS_RALT(string)
 
 #define SEND_STRING(str) send_string_P(PSTR(str))
 extern const bool ascii_to_shift_lut[0x80];
+extern const bool ascii_to_altgr_lut[0x80];
 extern const uint8_t ascii_to_keycode_lut[0x80];
 void send_string(const char *str);
 void send_string_with_delay(const char *str, uint8_t interval);
@@ -220,17 +229,29 @@ void matrix_init_kb(void);
 void matrix_scan_kb(void);
 void matrix_init_user(void);
 void matrix_scan_user(void);
+uint16_t get_record_keycode(keyrecord_t *record);
+uint16_t get_event_keycode(keyevent_t event);
 bool process_action_kb(keyrecord_t *record);
 bool process_record_kb(uint16_t keycode, keyrecord_t *record);
 bool process_record_user(uint16_t keycode, keyrecord_t *record);
+
+#ifndef BOOTMAGIC_LITE_COLUMN
+  #define BOOTMAGIC_LITE_COLUMN 0
+#endif
+#ifndef BOOTMAGIC_LITE_ROW
+  #define BOOTMAGIC_LITE_ROW 0
+#endif
+
+void bootmagic_lite(void);
 
 void reset_keyboard(void);
 
 void startup_user(void);
 void shutdown_user(void);
 
-void register_code16 (uint16_t code);
-void unregister_code16 (uint16_t code);
+void register_code16(uint16_t code);
+void unregister_code16(uint16_t code);
+void tap_code16(uint16_t code);
 
 #ifdef BACKLIGHT_ENABLE
 void backlight_init_ports(void);
