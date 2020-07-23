@@ -10,6 +10,7 @@ ifeq ($(RGB_MATRIX_ENABLE),custom)
 endif
 SRC += $(ARM_ATSAM_DIR)/main_arm_atsam.c
 SRC += $(ARM_ATSAM_DIR)/power.c
+SRC += $(ARM_ATSAM_DIR)/raw_handler.c
 SRC += $(ARM_ATSAM_DIR)/spi.c
 SRC += $(ARM_ATSAM_DIR)/startup.c
 

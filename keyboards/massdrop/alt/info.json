@@ -1,11 +1,11 @@
 {
     "keyboard_name": "ALT",
     "url": "https://drop.com/buy/massdrop-alt-mechanical-keyboard",
-    "maintainer": "Massdrop",
+    "maintainer": "Drop / Massdrop",
     "width": 16,
     "height": 5,
     "layouts": {
-        "LAYOUT": {
+        "LAYOUT_65_ansi_blocker": {
             "layout": [
               {"label":"ESCAPE", "x":0, "y":0},
               {"label":"1", "x":1, "y":0},

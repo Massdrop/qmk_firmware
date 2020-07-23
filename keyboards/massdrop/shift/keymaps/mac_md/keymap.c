@@ -22,7 +22,9 @@ enum shift_keycodes {
     DBG_KBD,            //DEBUG Toggle Keyboard Prints
     DBG_MOU,            //DEBUG Toggle Mouse Prints
     DBG_FAC,            //DEBUG Factory light testing (All on white)
-    MD_BOOT             //Restart into bootloader after hold timeout
+    MD_BOOT,             //Restart into bootloader after hold timeout
+	L_RATIOI,			// Increase Key to Underglow LED brightness Ratio
+	L_RATIOD			// Decrease Key to Underglow LED brightness Ratio
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
@@ -31,8 +33,7 @@ keymap_config_t keymap_config;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,                    KC_INS,  KC_HOME, KC_PGUP, KC_PAUS, \
-                                                                                                                                               KC_DEL,  KC_END,  KC_PGDN, KC_SLCK, \
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           KC_HOME, KC_END,  KC_PGUP, KC_PGDN, \
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_NLCK, KC_PSLS, KC_PAST, KC_PSCR, \
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_P7,   KC_P8,   KC_P9,   KC_PMNS, \
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,                    KC_P4,   KC_P5,   KC_P6,   KC_PPLS, \
@@ -42,11 +43,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                                                                     KC_LEFT, KC_DOWN, KC_RGHT                                      \
     ),
     [1] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   KC_MPLY, KC_MSTP, KC_VOLU, KC_MUTE, \
-                                                                                                                                               KC_MPRV, KC_MNXT, KC_VOLD, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS,           KC_MPLY, KC_MSTP, KC_VOLU, KC_MUTE, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_MPRV, KC_MNXT, KC_VOLD, KC_SLCK, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   L_EDG_I, _______, _______, _______, U_T_AGCR,_______, _______, _______, _______, _______,          _______, _______, _______, _______, \
-        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, \
+        L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, L_RATIOD,L_RATIOI,_______, _______, _______, _______,                   _______, _______, _______, _______, \
         _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, TG_NKRO, _______, _______, _______, _______, _______,                            _______, _______, _______,          \
                                                                                                                              _______,                                     _______, \
         _______, _______, _______,                   DBG_FAC,                            KC_APP,  _______,                                     _______, _______,                   \
@@ -54,8 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     /*
     [X] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, \
-                                                                                                                                               _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,_______,           _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, \
@@ -118,14 +117,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 if (led_edge_brightness < 0) { led_edge_brightness = 0; }
             }
             return false;
+        case L_RATIOI:
+            if (record->event.pressed) {
+                led_ratio_brightness += 0.2;
+                if (led_ratio_brightness > 2.0) { led_ratio_brightness = 2.0; }
+            }
+            return false;
+        case L_RATIOD:
+            if (record->event.pressed) {
+            	led_ratio_brightness -= 0.2;
+                if (led_ratio_brightness < 0.0) { led_ratio_brightness = 0.0; }
+            }
+            return false;
         case L_PTN:
             if (record->event.pressed) {
+            	led_mfg_test_mode = LED_MFG_TEST_MODE_OFF;
                 if (led_animation_id == led_setups_count - 1) led_animation_id = 0;
                 else led_animation_id++;
             }
             return false;
         case L_PTP:
             if (record->event.pressed) {
+            	led_mfg_test_mode = LED_MFG_TEST_MODE_OFF;
                 if (led_animation_id == 0) led_animation_id = led_setups_count - 1;
                 else led_animation_id--;
             }
@@ -149,7 +162,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case L_T_ONF:
             if (record->event.pressed) {
-                I2C3733_Control_Set(!I2C3733_Control_Get());
+                //I2C3733_Control_Set(!I2C3733_Control_Get());
+            	led_lighting_mode = ((led_lighting_mode == LED_MODE_INDICATORS_ONLY)? LED_MODE_NORMAL : LED_MODE_INDICATORS_ONLY);
             }
             return false;
         case L_ON:
@@ -210,6 +224,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case DBG_FAC:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
+            	led_mfg_test_mode = LED_MFG_TEST_MODE_ON;
                 led_lighting_mode = LED_MODE_NORMAL;
                 led_edge_brightness = 1;
                 led_edge_mode = LED_EDGE_MODE_ALL;
@@ -254,10 +269,40 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 led_instruction_t led_instructions[] = {
-    //Please see ../default_md/keymap.c for examples
-
+    //LEDs are normally inactive, no processing is performed on them
+    //Flags are used in matching criteria for an LED to be active and indicate how to color it
+    //Flags can be found in tmk_core/protocol/arm_atsam/led_matrix.h (prefixed with LED_FLAG_)
+    //LED IDs can be found in config_led.h in the keyboard's directory
+    //Examples are below
+    
     //All LEDs use the user's selected pattern (this is the factory default)
      { .flags = LED_FLAG_USE_ROTATE_PATTERN },
+
+    //Specific LEDs use the user's selected pattern while all others are off
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN, .id0 = 0xFFFFFFFF, .id1 = 0xAAAAAAAA, .id2 = 0x55555555, .id3 = 0x11111111 },
+
+    //Specific LEDs use specified RGB values while all others are off
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 0xFF, .id1 = 0x00FF, .id2 = 0x0000FF00, .id3 = 0xFF000000, .r = 75, .g = 150, .b = 225 },
+    
+    //All LEDs use the user's selected pattern
+    //On layer 1, all key LEDs (except the top row which keeps active pattern) are red while all edge LEDs are green
+    //When layer 1 is active, key LEDs use red    (id0  32 -  17: 1111 1111 1111 1111 0000 0000 0000 0000 = 0xFFFF0000) (except top row 16 - 1)
+    //When layer 1 is active, key LEDs use red    (id1  64 -  33: 1111 1111 1111 1111 1111 1111 1111 1111 = 0xFFFFFFFF)
+    //When layer 1 is active, key LEDs use red    (id2  87 -  65: 0000 0000 0111 1111 1111 1111 1111 1111 = 0x007FFFFF)
+    //When layer 1 is active, edge LEDs use green (id2  95 -  88: 1111 1111 1000 0000 0000 0000 0000 0000 = 0xFF800000)
+    //When layer 1 is active, edge LEDs use green (id3 119 -  96: 0000 0000 1111 1111 1111 1111 1111 1111 = 0x00FFFFFF)
+    // { .flags = LED_FLAG_USE_ROTATE_PATTERN },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id0 = 0xFFFF0000, .id1 = 0xFFFFFFFF, .id2 = 0x007FFFFF, .r = 255, .layer = 1 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_MATCH_LAYER | LED_FLAG_USE_RGB, .id2 = 0xFF800000, .id3 = 0x00FFFFFF, .g = 127, .layer = 1 },
+
+    //All key LEDs use red while edge LEDs use the active pattern
+    //All key LEDs use red     (id0  32 -   1: 1111 1111 1111 1111 1111 1111 1111 1111 = 0xFFFFFFFF)
+    //All key LEDs use red     (id1  64 -  33: 1111 1111 1111 1111 1111 1111 1111 1111 = 0xFFFFFFFF)
+    //All key LEDs use red     (id2  87 -  65: 0000 0000 0111 1111 1111 1111 1111 1111 = 0x007FFFFF)
+    //Edge uses active pattern (id2  95 -  88: 1111 1111 1000 0000 0000 0000 0000 0000 = 0xFF800000)
+    //Edge uses active pattern (id3 119 -  96: 0000 0000 1111 1111 1111 1111 1111 1111 = 0x00FFFFFF)
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_RGB, .id0 = 0xFFFFFFFF, .id1 = 0xFFFFFFFF, .id2 = 0x007FFFFF, .r = 255 },
+    // { .flags = LED_FLAG_MATCH_ID | LED_FLAG_USE_ROTATE_PATTERN , .id2 = 0xFF800000, .id3 = 0x00FFFFFF },
 
     //end must be set to 1 to indicate end of instruction set
      { .end = 1 }

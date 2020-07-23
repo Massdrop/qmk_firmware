@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_C1B5        2   //Connector 1 B5 CC voltage
 #define ADC_C2A5        3   //Connector 2 A5 CC voltage
 #define ADC_C2B5        4   //Connector 2 B5 CC voltage
-#define ADC_C1I         5   //Connector 1 current
-#define ADC_C2I         6   //Connector 2 current
+#define ADC_C1I         5   //Connector 1 current (unused)
+#define ADC_C2I         6   //Connector 2 current (unused)
 
 //ADC_PORT: PORT of the PIN on the MCU (Ex: 0 = PA, 1 = PB, ...)
 //          Set ADC_PORT to ADC_NA if it is not available for use
@@ -53,20 +53,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_CONFIG_C1B5 1,      4,  1, 1, ADC_INPUTCTRL_MUXPOS_AIN6_Val,  ADC_REFCTRL_REFSEL_INTREF_Val,  ADC_AVGCTRL_SAMPLENUM_4_Val,    63
 #define ADC_CONFIG_C2A5 1,      1,  1, 0, ADC_INPUTCTRL_MUXPOS_AIN13_Val, ADC_REFCTRL_REFSEL_INTREF_Val,  ADC_AVGCTRL_SAMPLENUM_4_Val,    63
 #define ADC_CONFIG_C2B5 1,      5,  1, 1, ADC_INPUTCTRL_MUXPOS_AIN7_Val,  ADC_REFCTRL_REFSEL_INTREF_Val,  ADC_AVGCTRL_SAMPLENUM_4_Val,    63
-#define ADC_CONFIG_C1I  0,      10, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN10_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_4_Val,    45
-#define ADC_CONFIG_C2I  0,      11, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN11_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_4_Val,    45
+//#define ADC_CONFIG_C1I  0,      10, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN10_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_256_Val,   63
+//#define ADC_CONFIG_C2I  0,      11, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN11_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_256_Val,   63
+#define ADC_CONFIG_C1I  0,      10, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN10_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_16_Val,   63
+#define ADC_CONFIG_C2I  0,      11, 1, 0, ADC_INPUTCTRL_MUXPOS_AIN11_Val, ADC_REFCTRL_REFSEL_INTVCC1_Val, ADC_AVGCTRL_SAMPLENUM_16_Val,   63
 
-//Conversion values dependant upon the circuitry
-#define ADC_I_MILLIAMPS_PER_COUNT   -0.000980472f
-#define ADC_I_MILLIAMPS_OFFSET      1.979711769f
+//Conversion values dependent upon the circuitry
+//#define ADC_I_MILLIAMPS_PER_COUNT   -0.000980472f		// ***TBD
+//#define ADC_I_MILLIAMPS_OFFSET      1.979711769f		// ***TBD
 #define ADC_5V_VOLTS_PER_COUNT      0.001904297f
 #define ADC_5V_VOLTS_OFFSET         0.0f
 #define ADC_5V_NOMINAL              5.0f
 #define ADC_5V_NOMINAL_COUNTS       (ADC_5V_NOMINAL / ADC_5V_VOLTS_PER_COUNT)
 
 //Conversion macros
-#define ADC_CI_C2I(macounts)        ((float)macounts * ADC_I_MILLIAMPS_PER_COUNT + ADC_I_MILLIAMPS_OFFSET)          //Converts connector current counts to milliamps
-#define ADC_CI_I2C(ma)              (uint16_t)((((float)ma - ADC_I_MILLIAMPS_OFFSET) / ADC_I_MILLIAMPS_PER_COUNT))  //Converts milliamps to connector current counts
+//#define ADC_CI_C2I(macounts)        ((float)macounts * ADC_I_MILLIAMPS_PER_COUNT + ADC_I_MILLIAMPS_OFFSET)          //Converts connector current counts to milliamps
+//#define ADC_CI_I2C(ma)              (uint16_t)((((float)ma - ADC_I_MILLIAMPS_OFFSET) / ADC_I_MILLIAMPS_PER_COUNT))  //Converts milliamps to connector current counts
 #define ADC_5V_C2V(icounts)         ((float)icounts * ADC_5V_VOLTS_PER_COUNT + ADC_5V_VOLTS_OFFSET)                 //Converts 5V Bus counts to volts
 #define ADC_5V_V2C(v)               (uint16_t)((((float)v - ADC_5V_VOLTS_OFFSET) / ADC_5V_VOLTS_PER_COUNT))         //Converts 5V Bus volts to counts
 #define ADC_CC_5VCOR(v5counts, cc)  ((float)v5counts == 0 ? 0 : (uint16_t)(ADC_5V_NOMINAL_COUNTS / (float)v5counts * (float)cc)) //Corrects CC counts to nominal 5V value

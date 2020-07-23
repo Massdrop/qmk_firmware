@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define ADC_NA                  -1      //Value to mark an ADC as not available for use and return from an acquire
 #define ADC_5V_START_LEVEL      4.75f   //In volts, system will wait until voltage is greater than this
+#define ADC_NUM_INDICES         7   	//
 
 extern uint16_t g_v_5v;
 extern float g_v_5v_avg;

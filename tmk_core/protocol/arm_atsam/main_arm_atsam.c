@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include "quantum.h"
 
+
 //From protocol directory
 #include "arm_atsam_protocol.h"
 
@@ -259,8 +260,9 @@ int main(void)
 
     ADC_init();
 
+#ifndef NO_MD_SR_EXT
     SR_EXP_Init();
-
+#endif
 #ifdef RGB_MATRIX_ENABLE
     i2c1_init();
 #endif // RGB_MATRIX_ENABLE
@@ -278,8 +280,9 @@ int main(void)
     CDC_init();
     DBGC(DC_MAIN_CDC_INIT_COMPLETE);
 
+#ifndef NO_MD_USB2422		// Do we need alternate for non HUB products?  ***TBD
     while (USB2422_Port_Detect_Init() == 0) {}
-
+#endif
     DBG_LED_OFF;
 
 #ifdef RGB_MATRIX_ENABLE
@@ -300,7 +303,7 @@ int main(void)
 
     host_set_driver(&arm_atsam_driver);
 
-#ifdef CONSOLE_ENABLE
+#if defined(CONSOLE_ENABLE)
     uint64_t next_print = 0;
 #endif //CONSOLE_ENABLE
 
@@ -325,7 +328,11 @@ int main(void)
 
         keyboard_task();
 
-#ifdef CONSOLE_ENABLE
+#ifdef RAW_ENABLE
+        raw_hid_task();
+#endif
+
+#if defined(CONSOLE_ENABLE)
         if (timer_read64() > next_print)
         {
             next_print = timer_read64() + 1;
@@ -342,11 +349,28 @@ int main(void)
             //dprintf("%4u %4u %4u %4u %2u %1u\n",usbc_cc_a5_v,usbc_cc_b5_v,(uint16_t)usbc_cc_a5_v_avg,(uint16_t)usbc_cc_b5_v_avg,usbc.state,usbc.state == USB_STATE_ATTACHED_SRC ? 1 : 0);
 
             //Power manager monitoring
-            //dprintf("%4u %4u %3u %3u %3u %i %3u\n",g_v_5v,(uint16_t)g_v_5v_avg,gcr_desired,(uint8_t)gcr_actual,gcr_actual_last,gcr_change_counter,usbc.state);
+            dprintf("%4u %4u %3u %3u %3u %3u %3u\n", g_v_5v, (uint16_t)g_v_5v_avg, gcr_desired,(uint8_t)gcr_actual, gcr_actual_last, usbc.state, I2C3733_Control_Get());
+            //dprintf("%u %u %u %f %u %u %u\n",
+            //		led_animation_breathing,
+            //		led_animation_id,
+			//		led_lighting_mode,
+			//		led_animation_speed,
+			//		led_animation_breathe_cur,
+			//		led_animation_direction,
+			//		breathe_dir );
+
+            //dprintf("\n");
+            //for (uint8_t i = 0; i < ISSI3733_LED_COUNT; i++)
+            //{
+            //	dprintf("%2u: %u, %u, %u\n", i, led_buffer[i].r, led_buffer[i].g, led_buffer[i].b);
+            //}
+
         }
 #endif //CONSOLE_ENABLE
+
     }
 
     return 1;
 }
+
 

@@ -45,16 +45,17 @@
  */
 
 #ifndef ARM_MATH_CM4
- #define ARM_MATH_CM4
+#    define ARM_MATH_CM4
 #endif
 
-#undef LITTLE_ENDIAN  //redefined in samd51j18a.h
+#undef LITTLE_ENDIAN  // redefined in samd51j18a.h
 #include "samd51j18a.h"
 #include "ui.h"
 
 //! Sequence process running each \c SEQUENCE_PERIOD ms
 #define SEQUENCE_PERIOD 150
 
+static bool _isWakeupEnabled = true;
 #if 0
 /* Interrupt on "pin change" from push button to do wakeup on USB
  * Note:
@@ -68,37 +69,26 @@ static void ui_wakeup_handler(void)
 }
 #endif
 
-void ui_init(void)
-{
-
+void ui_init(void) {
+	_isWakeupEnabled = true;
 }
 
-void ui_powerdown(void)
-{
+void ui_powerdown(void) {}
 
+void ui_wakeup_enable(void) {
+	_isWakeupEnabled = true;
 }
 
-void ui_wakeup_enable(void)
-{
-
+void ui_wakeup_disable(void) {
+	_isWakeupEnabled = false;
 }
 
-void ui_wakeup_disable(void)
-{
+void ui_wakeup(void) {}
 
-}
+void ui_process(uint16_t framenumber) {}
 
-void ui_wakeup(void)
-{
+void ui_kbd_led(uint8_t value) {}
 
-}
-
-void ui_process(uint16_t framenumber)
-{
-
-}
-
-void ui_kbd_led(uint8_t value)
-{
-
+bool ui_is_remotewakeup_enabled(void) {
+	return(_isWakeupEnabled);
 }

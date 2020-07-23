@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef MD_BOOTLOADER
 
-#include <stdlib.h> //For abs()
-#include "config.h" //From keyboard's directory
+#    include <stdlib.h>  //For abs()
+#    include "config.h"  //From keyboard's directory
 
 #endif
 
@@ -43,14 +43,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MD_BOOTLOADER
 
-#include "main_arm_atsam.h"
-#ifdef RGB_MATRIX_ENABLE
-#include "led_matrix.h"
-#include "rgb_matrix.h"
-#endif
-#include "issi3733_driver.h"
-#include "./usb/compiler.h"
-#include "./usb/udc.h"
-#include "./usb/udi_cdc.h"
+#    include "main_arm_atsam.h"
+#    ifdef RGB_MATRIX_ENABLE
+#        include "led_matrix.h"
+#        include "rgb_matrix.h"
+#    endif
+#    include "issi3733_driver.h"
+#    include "./usb/compiler.h"
+#    include "./usb/udc.h"
+#    include "./usb/udi_cdc.h"
 
-#endif //MD_BOOTLOADER
+#endif  // MD_BOOTLOADER
